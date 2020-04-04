@@ -1,87 +1,52 @@
-import * as express from "express";
-import config from "./config";
 var mongoose = require("mongoose");
-import actions from "./Utils/Actions";
-import { map } from "lodash";
+import taskFunctions from "./Utils/Tasks";
 
 // Models
 require("./Utils/Models/Objects");
 require("./Utils/Models/Entries");
 require("./Utils/Models/AppPermissions");
 
-// Start up server
-const app = express();
-app.set("port", process.env.PORT || config.port);
-app.use(express.static("../../Files/Public"));
-let http = require("http").Server(app);
-let io = require("socket.io")(http);
-
 mongoose.connect(`mongodb://localhost/AppBox`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection error:"));
-db.once("open", function() {
+db.once("open", function () {
   // Models
   const models = {
     objects: {
       model: mongoose.model("Objects"),
       stream: db.collection("objects").watch(),
-      listeners: {}
+      listeners: {},
     },
     entries: {
       model: mongoose.model("Entries"),
       stream: db.collection("entries").watch(),
-      listeners: {}
+      listeners: {},
     },
     apppermissions: {
-      model: mongoose.model("AppPermissions")
-    }
+      model: mongoose.model("AppPermissions"),
+    },
   };
 
-  // Change streams
-  models.objects.stream.on("change", change => {
-    map(models.objects.listeners, listener => {
-      listener(change);
+  // Trigger functions
+  const processTasks = (tasks) => {
+    tasks.map((task) => {
+      if (task.data.action === "formula-calculate") {
+        taskFunctions.formula.calculate(task, models);
+      }
+    });
+  };
+  models.entries.stream.on("change", (change) => {
+    models.entries.model.find({ objectId: "system-task" }).then((tasks) => {
+      processTasks(tasks);
     });
   });
-  models.entries.stream.on("change", change => {
-    map(models.entries.listeners, (listener, key) => {
-      listener(change);
-    });
+
+  models.entries.model.find({ objectId: "system-task" }).then((tasks) => {
+    processTasks(tasks);
   });
 
-  console.log("Connected to database and loaded models.");
-
-  http.listen(config.port, () => {
-    console.log(`Server open on http://localhost:${config.port}`);
-
-    // Client interaction
-    io.on("connection", (socket: any) => {
-      const socketInfo = {
-        listeners: [],
-        permissions: ["public"],
-        username: undefined
-      };
-      console.log("A user connected");
-
-      actions.map(action => {
-        socket.on(action.key, args => {
-          action.action(args, models, socket, socketInfo);
-        });
-      });
-
-      socket.on("disconnect", () => {
-        socketInfo.listeners.map(listener => {
-          delete models.objects.listeners[listener];
-          delete models.entries.listeners[listener];
-          console.log(
-            "Session closed, deleted unneccessary listener.",
-            listener
-          );
-        });
-      });
-    });
-  });
+  console.log("Watching and executing tasks");
 });
