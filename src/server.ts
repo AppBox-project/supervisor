@@ -38,7 +38,7 @@ db.once("open", function () {
   // Trigger functions
   const processTasks = (tasks) => {
     tasks.map((task) => {
-      if (!task.done) {
+      if (!task.data.done) {
         console.log(`Processing task ${task.data.action}`);
 
         if (task.data.action === "formula-calculate") {
