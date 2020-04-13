@@ -24,7 +24,7 @@
   "license": "MIT",
   "scripts": {
     "prepareDb": "mongod --replSet \"rs\" --dbpath /AppBox/System/Database",
-    "updateClient": "git -C /AppBox/System/Client pull && yarn build",
+    "updateClient": "git -C /AppBox/System/Client pull && yarn --cwd ../Client build",
     "updateServer": "git -C /AppBox/System/Server pull",
     "updateSupervisor": "git -C /AppBox/System/Supervisor pull",
     "updateBox": "concurrently -k -p 'yarn updateClient' 'yarn updateServer' 'yarn updateSupervisor'",
