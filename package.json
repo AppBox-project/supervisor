@@ -18,7 +18,7 @@
   "name": "appbox-server",
   "version": "0.0.1",
   "description": "Server for AppBox",
-  "main": "server.js",
+  "main": "server.ts",
   "author": "Vic van Cooten",
   "license": "MIT",
   "scripts": {
