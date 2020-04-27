@@ -39,14 +39,21 @@ db.once("open", function () {
   const processTasks = (tasks) => {
     tasks.map((task) => {
       if (!task.data.done) {
-        console.log(`Processing task ${task.data.action}`);
-
-        if (task.data.action === "formula-calculate") {
-          taskFunctions.formula.calculate(task, models);
-        }
-
-        if (task.data.action === "box-update") {
-          taskFunctions.updates.update(task, models);
+        switch (task.data.action) {
+          case "formula-calculate":
+            taskFunctions.formula.calculate(task, models);
+            break;
+          case "box-update":
+            taskFunctions.updates.update(task, models);
+            break;
+          case "app-install":
+            if (task.data.progress === 0) {
+              taskFunctions.general.installApp(task, models);
+            }
+            break;
+          default:
+            console.log(`Unknown task action ${task.data.action}`);
+            break;
         }
       }
     });
