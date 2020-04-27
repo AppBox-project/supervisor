@@ -35,10 +35,16 @@ export default async (task, models) => {
       );
 
       // More
+      // Step x: Register app
+      task.data.state = "Rebuilding client (this will take a while)";
+      task.data.progress = 70;
+      task.markModified("data");
+      await task.save();
+      shell.exec("yarn --cwd ../Client build");
 
       // Step x: Register app
       task.data.state = "Registering app";
-      task.data.progress = 70;
+      task.data.progress = 90;
       task.markModified("data");
       await task.save();
       const newApp = await models.entries.model.create({
