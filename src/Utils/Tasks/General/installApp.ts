@@ -53,7 +53,7 @@ export default async (task, models) => {
 
       // More
       // Step x: Register app
-      task.data.state = "Rebuilding client (this will take a while)";
+      task.data.state = "Rebuilding client...";
       task.data.progress = 70;
       task.markModified("data");
       await task.save();
