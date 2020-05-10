@@ -34,6 +34,23 @@ export default async (task, models) => {
         )
       );
 
+      // Step 3: Clone repo
+      if (app.data.backend_repository) {
+        task.data.state = "Installing backend";
+        task.data.progress = 30;
+        task.markModified("data");
+        await task.save();
+        shell.exec(
+          `git -C /AppBox/System/Backends/ clone ${app.data.backend_repository} ${task.data.arguments.appId}`
+        );
+        shell.exec(
+          `yarn --cwd /AppBox/System/Backends/${task.data.arguments.appId} install`
+        );
+        shell.exec(
+          `yarn --cwd /AppBox/System/Backends/${task.data.arguments.appId} build`
+        );
+      }
+
       // More
       // Step x: Register app
       task.data.state = "Rebuilding client (this will take a while)";
