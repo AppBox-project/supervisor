@@ -5,10 +5,11 @@ import taskFunctions from "./Utils/Tasks";
 require("./Utils/Models/Objects");
 require("./Utils/Models/Entries");
 require("./Utils/Models/AppPermissions");
+import { mongoDefaultConnection } from "./secrets";
 
 mongoose.connect(
   `mongodb://${
-    process.env.DBURL ? process.env.DBURL : "192.168.0.2:27017"
+    process.env.dbUrl ? process.env.dbUrl : mongoDefaultConnection
   }/AppBox`,
   {
     useNewUrlParser: true,
