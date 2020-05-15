@@ -10,7 +10,7 @@ import { mongoDefaultConnection } from "./secrets";
 mongoose.connect(
   `mongodb://${
     process.env.dbUrl ? process.env.dbUrl : mongoDefaultConnection
-  }/AppBox`,
+  }/AppBox?authSource=admin&readPreference=primaryPreferred&appname=AppBox-Supervisor&ssl=false`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
