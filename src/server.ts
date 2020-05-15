@@ -5,7 +5,6 @@ import taskFunctions from "./Utils/Tasks";
 require("./Utils/Models/Objects");
 require("./Utils/Models/Entries");
 require("./Utils/Models/AppPermissions");
-import { mongoDefaultConnection } from "./secrets";
 
 mongoose.connect(
   `mongodb://${
