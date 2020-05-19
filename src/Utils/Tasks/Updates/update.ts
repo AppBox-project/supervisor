@@ -14,6 +14,7 @@ export default async (task, models) => {
     const taskObject = await models.entries.model.findOne({ _id: task._id });
     task.data.state = "Updates found. Installing and recompiling client.";
     task.data.progress = 25;
+    task.data.done = false;
     taskObject.markModified("data");
     await taskObject.save();
 
