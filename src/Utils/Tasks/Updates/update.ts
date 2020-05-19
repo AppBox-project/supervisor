@@ -5,9 +5,6 @@ export default async (task, models) => {
 
   // After this
   const taskObject = await models.entries.model.findOne({ _id: task._id });
-  taskObject.data.done = true;
-  taskObject.markModified("data");
-  await taskObject.save();
 
   // Step 1: Client
   let result = await shell.exec("git -C /AppBox/System/Client pull");
