@@ -38,7 +38,10 @@ db.once("open", function () {
   // Trigger functions
   const processTasks = (tasks) => {
     tasks.map((task) => {
-      if (!task.data.done) {
+      if (
+        !task.data.done &&
+        (!task.data.progress || task.data.progress === 0)
+      ) {
         switch (task.data.action) {
           case "formula-calculate":
             taskFunctions.formula.calculate(task, models);
