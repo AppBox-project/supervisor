@@ -5,6 +5,7 @@ import taskFunctions from "./Utils/Tasks";
 require("./Utils/Models/Objects");
 require("./Utils/Models/Entries");
 require("./Utils/Models/AppPermissions");
+require("./Utils/Models/UserSettings");
 
 mongoose.connect(
   `mongodb://${
@@ -33,6 +34,9 @@ db.once("open", function () {
     apppermissions: {
       model: mongoose.model("AppPermissions"),
     },
+    usersettings: {
+      model: mongoose.model("UserSettings"),
+    },
   };
 
   // Trigger functions
@@ -48,6 +52,9 @@ db.once("open", function () {
             break;
           case "box-update":
             taskFunctions.updates.update(task, models);
+            break;
+          case "backup":
+            taskFunctions.general.backup(task, models);
             break;
           case "app-install":
             if (task.data.progress === 0) {
