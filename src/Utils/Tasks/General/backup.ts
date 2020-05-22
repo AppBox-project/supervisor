@@ -19,7 +19,7 @@ export default async (task, models) => {
   await task.save();
   await fs.writeFile(
     `${dir}AppPermissions.json`,
-    await models.apppermissions.model.find({}),
+    JSON.stringify(await models.apppermissions.model.find({})),
     (err) => {
       if (err) console.log(err);
     }
@@ -32,7 +32,7 @@ export default async (task, models) => {
   await task.save();
   await fs.writeFile(
     `${dir}Objects.json`,
-    await models.entries.model.find({}),
+    JSON.stringify(await models.entries.model.find({})),
     (err) => {
       if (err) console.log(err);
     }
@@ -45,7 +45,7 @@ export default async (task, models) => {
   await task.save();
   await fs.writeFile(
     `${dir}Models.json`,
-    await models.objects.model.find({}),
+    JSON.stringify(await models.objects.model.find({})),
     (err) => {
       if (err) console.log(err);
     }
@@ -58,7 +58,7 @@ export default async (task, models) => {
   await task.save();
   await fs.writeFile(
     `${dir}UserSettings.json`,
-    await models.usersettings.model.find({}),
+    JSON.stringify(await models.usersettings.model.find({})),
     (err) => {
       if (err) console.log(err);
     }
