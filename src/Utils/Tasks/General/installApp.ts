@@ -7,7 +7,7 @@ export default async (task, models) => {
 
   axios
     .get(
-      `https://appbox.vicvan.co/api/appbox-app/read/?key=${task.data.arguments.appId}`
+      `https://appbox.vicvancooten.nl/api/appbox-app/read/?key=${task.data.arguments.appId}`
     )
     .then(async (response) => {
       const app = response.data[0];
