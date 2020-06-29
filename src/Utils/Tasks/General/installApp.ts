@@ -1,6 +1,7 @@
 var shell = require("shelljs");
 const axios = require("axios");
 var fs = require("fs");
+import { map } from "lodash";
 
 export default async (task, models) => {
   console.log(`Starting install task for ${task.data.arguments.appId}`);
@@ -51,8 +52,22 @@ export default async (task, models) => {
         );
       }
 
-      // More
-      // Step x: Register app
+      // Step 4: Register as link handler
+      if (manifest.handlerFor) {
+        map(manifest.handlerFor, async (value, key) => {
+          if (typeof key === "string") {
+            const model = await models.objects.model.find({ objectId: key });
+            if (model.handlers) {
+              model.handlers = {};
+            }
+            model.handlers[task.data.arguments.appId] = value;
+            model.markModified("handlers");
+            model.save();
+          }
+        });
+      }
+
+      // Step 4: Rebuild client
       task.data.state = "Rebuilding client...";
       task.data.progress = 70;
       task.markModified("data");
@@ -69,7 +84,12 @@ export default async (task, models) => {
         data: {
           id: task.data.arguments.appId,
           name: app.data.name,
-          color: manifest.color,
+          color: {
+            r: manifest.color.r,
+            g: manifest.color.g,
+            b: manifest.color.b,
+            a: manifest.color.a,
+          },
           icon: manifest.icon,
           mobileSettings: manifest.mobileSettings,
         },
