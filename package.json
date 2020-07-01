@@ -28,7 +28,7 @@
     "updateClient": "git -C /AppBox/System/Client pull && yarn --cwd ../Client install && yarn --cwd ../Client build",
     "updateServer": "git -C /AppBox/System/Server reset --hard && git -C /AppBox/System/Server pull && yarn --cwd ../Server install",
     "updateSiteServer": "git -C /AppBox/System/SiteServer pull && yarn --cwd ../SiteServer install",
-    "updateSupervisor": "git -C /AppBox/System/Supervisor pull",
+    "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull",
     "updateBox": "yarn updateClient && yarn updateServer && yarn updateSiteServer && yarn updateSupervisor",
     "runServer": "yarn --cwd ../Server start",
     "runSiteServer": "yarn --cwd ../SiteServer start",
