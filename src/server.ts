@@ -61,6 +61,11 @@ db.once("open", function () {
               taskFunctions.general.installApp(task, models);
             }
             break;
+          case "app-update":
+            if (task.data.progress === 0) {
+              taskFunctions.general.updateApp(task, models);
+            }
+            break;
           default:
             console.log(`Unknown task action ${task.data.action}`);
             break;
