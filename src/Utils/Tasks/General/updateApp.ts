@@ -19,7 +19,7 @@ export default async (task, models) => {
       task.markModified("data");
       await task.save();
       shell.exec(
-        `git -C /AppBox/System/Client/src/Apps-User/${task.data.arguments.appId} clone`
+        `git -C /AppBox/System/Client/src/Apps-User/${task.data.arguments.appId} pull`
       );
 
       // Step 2: Read manifest
