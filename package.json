@@ -17,10 +17,10 @@
     "socket.io": "^2.3.0",
     "typescript": "^3.8.3"
   },
-  "name": "appbox-server",
+  "name": "appbox-supervisor",
   "version": "0.0.1",
-  "description": "Server for AppBox",
-  "main": "server.ts",
+  "description": "Appbox core: supervisor. Responsible for keeping various important parts of appbox (server, engine, backends) up and running. Can interact with the filesystem.",
+  "main": "supervisor.ts",
   "author": "Vic van Cooten",
   "license": "MIT",
   "scripts": {
@@ -31,13 +31,14 @@
     "updateSiteServer": "git -C /AppBox/System/SiteServer pull && yarn --cwd ../SiteServer install",
     "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull",
     "updateBox": "yarn updateClient && yarn updateServer && yarn updateSiteServer && yarn updateSupervisor",
-    "runServer": "yarn --cwd ../Server start",
-    "runEngine": "yarn --cwd ../Engine start",
-    "runSiteServer": "yarn --cwd ../SiteServer start",
+    "runServer": "DBURL=${DBURL:-localhost:27017} yarn --cwd ../Server start",
+    "runEngine": "DBURL=${DBURL:-localhost:27017} yarn --cwd ../Engine start",
+    "runSiteServer": "DBURL=${DBURL:-localhost:27017} yarn --cwd ../SiteServer start",
     "build": "tsc",
     "watch-ts": "tsc -w",
-    "watch-node": "nodemon dist/server.js",
-    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" 'yarn runSiteServer' 'yarn runEngine' 'yarn runServer' \"yarn run watch-ts\" \"yarn run watch-node\"",
+    "watch-node": "nodemon dist/supervisor.js",
+    "runSupervisor": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" 'yarn runSiteServer' 'yarn runEngine' 'yarn runServer' \"yarn run watch-ts\" \"yarn run watch-node\"",
+    "start": "DBURL=${DBURL:-localhost:27017} yarn runSupervisor",
     "test": "mocha -r ts-node/register src/**/*.spec.ts"
   }
 }
