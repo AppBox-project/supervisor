@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+import { systemLog } from "./Utils/Functions/common";
 import taskFunctions from "./Utils/Tasks";
 
 // Models
@@ -6,6 +7,8 @@ require("./Utils/Models/Objects");
 require("./Utils/Models/Entries");
 require("./Utils/Models/AppPermissions");
 require("./Utils/Models/UserSettings");
+
+systemLog(`Looking for the database at: ${process.env.DBURL}`);
 
 mongoose.connect(`mongodb://${process.env.DBURL || "localhost:27017"}/AppBox`, {
   useNewUrlParser: true,
@@ -62,7 +65,7 @@ db.once("open", function () {
             }
             break;
           default:
-            console.log(`Unknown task action ${task.data.action}`);
+            systemLog(`Unknown task action ${task.data.action}`);
             break;
         }
       }
@@ -78,5 +81,5 @@ db.once("open", function () {
     processTasks(tasks);
   });
 
-  console.log("Watching and executing tasks");
+  systemLog("Watching and executing tasks");
 });

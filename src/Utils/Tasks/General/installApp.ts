@@ -2,9 +2,10 @@ var shell = require("shelljs");
 const axios = require("axios");
 var fs = require("fs");
 import { map } from "lodash";
+import { systemLog } from "../../../Utils/Functions/common";
 
 export default async (task, models) => {
-  console.log(`Starting install task for ${task.data.arguments.appId}`);
+  systemLog(`Starting install task for ${task.data.arguments.appId}`);
 
   axios
     .get(
@@ -29,11 +30,12 @@ export default async (task, models) => {
       task.markModified("data");
       await task.save();
       const manifest = JSON.parse(
-        fs.readFileSync(
+        await fs.readFileSync(
           `/AppBox/System/Client/src/Apps-User/${task.data.arguments.appId}/manifest.json`,
           "utf8"
         )
       );
+      console.log(manifest);
 
       // Step 3: Clone repo
       if (app.data.backend_repository) {
