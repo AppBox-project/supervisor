@@ -35,10 +35,30 @@ export default async (task, models) => {
           "utf8"
         )
       );
-      console.log(manifest);
 
-      // Step 3: Clone repo
+      // Step 3: Install all the default information from the manifest.
+      // 3.1 objects
+      if (manifest.defaultModels) {
+        const mergedModels = {
+          ...(manifest.defaultModels.required || {}),
+          ...(manifest.defaultModels.optional || {}),
+        }; // Combine the optional and the required model. The seperation only exists for updating. When installing no difference is required.
+        const count = Object.keys(mergedModels).length;
+        task.data.state = `Installing ${count} ${
+          count === 1 ? "model" : "models"
+        }.`;
+        task.data.progress = 22;
+        task.markModified("data");
+        await task.save();
+
+        // Loop through the merged model (optional and combined together) and
+        map(mergedModels, (model, modelKey) => {
+          new models.objects.model(model).save();
+        });
+      }
+
       if (app.data.backend_repository) {
+        // Step 3: Clone repo
         task.data.state = "Installing backend";
         task.data.progress = 30;
         task.markModified("data");

@@ -45,9 +45,6 @@ db.once("open", function () {
         (!task.data.progress || task.data.progress === 0)
       ) {
         switch (task.data.action) {
-          case "formula-calculate":
-            taskFunctions.formula.calculate(task, models);
-            break;
           case "box-update":
             taskFunctions.updates.update(task, models);
             break;
@@ -57,6 +54,11 @@ db.once("open", function () {
           case "app-install":
             if (task.data.progress === 0) {
               taskFunctions.general.installApp(task, models);
+            }
+            break;
+          case "app-uninstall":
+            if (task.data.progress === 0) {
+              taskFunctions.general.uninstallApp(task, models);
             }
             break;
           case "app-update":
