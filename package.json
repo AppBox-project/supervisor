@@ -7,11 +7,10 @@
     "@types/socket.io": "^2.1.4",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
-    "concurrently": "^5.1.0",
     "express": "^4.17.1",
+    "forever-monitor": "^3.0.1",
     "lodash": "^4.17.19",
     "mongoose": "^5.8.10",
-    "nodemon": "^2.0.2",
     "nunjucks": "^3.2.0",
     "shelljs": "^0.8.3",
     "socket.io": "^2.3.0",
@@ -37,8 +36,9 @@
     "build": "tsc",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/supervisor.js",
-    "runSupervisor": "concurrently -k -p \"[{name}]\" -n \"TypeScript, Node\" -c \"yello.bold, cyan.bold\" 'yarn runSiteServer' 'yarn runEngine' 'yarn runServer' \"yarn run watch-ts\" \"yarn run watch-node\"",
+    "runSupervisor": "pm2 start dist/supervisor.js --no-daemon --watch --time --name=\"AppBox-Supervisor\" --exp-backoff-restart-delay=100",
     "start": "DBURL=${DBURL:-localhost:27017} yarn runSupervisor",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts"
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "develop": "yarn build && DBURL=${DBURL:-localhost:27017} yarn start"
   }
 }
