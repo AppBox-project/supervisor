@@ -9,7 +9,7 @@ export const calculateFormulaFromId = async (
 ) => {
   // Step 1: fetch basemodel
   return new Promise(async (resolve, reject) => {
-    let data = await models.entries.model.findOne({ _id: contextId });
+    let data = await models.objects.model.findOne({ _id: contextId });
     data = data.data;
 
     dependencies.map(async (dependency) => {
@@ -31,7 +31,7 @@ export const calculateFormulaFromId = async (
             // Follow the relationships and add the data
             if (pathPart.match("_r")) {
               const _id = get(data, idPath);
-              const subData = await models.entries.model.findOne({ _id });
+              const subData = await models.objects.model.findOne({ _id });
               newData = set(newData, subPath, subData.data);
             }
 

@@ -37,8 +37,8 @@ export default async (task, models) => {
 
       // Loop through the merged model (optional and combined together) and
       map(mergedModels, async (model, modelKey) => {
-        await models.objects.model.deleteOne({ key: modelKey });
-        await models.entries.model.deleteMany({ objectId: modelKey });
+        await models.models.model.deleteOne({ key: modelKey });
+        await models.objects.model.deleteMany({ objectId: modelKey });
       });
     }
 
@@ -65,7 +65,7 @@ export default async (task, models) => {
     task.data.progress = 90;
     task.markModified("data");
     await task.save();
-    await models.entries.model.deleteOne({
+    await models.objects.model.deleteOne({
       objectId: "app",
       "data.id": task.data.arguments.appId,
     });

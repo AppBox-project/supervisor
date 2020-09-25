@@ -53,7 +53,7 @@ export default async (task, models) => {
 
         // Loop through the merged model (optional and combined together) and
         map(mergedModels, (model, modelKey) => {
-          new models.objects.model(model).save();
+          new models.models.model(model).save();
         });
       }
 
@@ -78,7 +78,7 @@ export default async (task, models) => {
       if (manifest.handlerFor) {
         map(manifest.handlerFor, async (value, key) => {
           if (typeof key === "string") {
-            const model = await models.objects.model.findOne({ key });
+            const model = await models.models.model.findOne({ key });
             const handlers = model.handlers || {};
             handlers[task.data.arguments.appId] = value;
             model.handlers = handlers;
@@ -100,7 +100,7 @@ export default async (task, models) => {
       task.data.progress = 90;
       task.markModified("data");
       await task.save();
-      const newApp = await models.entries.model.create({
+      const newApp = await models.objects.model.create({
         objectId: "app",
         data: {
           id: task.data.arguments.appId,

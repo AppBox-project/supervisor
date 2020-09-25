@@ -55,7 +55,7 @@ export default async (task, models) => {
       if (manifest.handlerFor) {
         map(manifest.handlerFor, async (value, key) => {
           if (typeof key === "string") {
-            const model = await models.objects.model.findOne({ key });
+            const model = await models.models.model.findOne({ key });
             const handlers = model.handlers || {};
             handlers[task.data.arguments.appId] = value;
             model.handlers = handlers;

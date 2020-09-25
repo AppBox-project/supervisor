@@ -4,7 +4,7 @@ import taskFunctions from "./Utils/Tasks";
 import Axios from "axios";
 
 // Models
-require("./Utils/Models/Objects");
+require("./Utils/Models/Models");
 require("./Utils/Models/Entries");
 require("./Utils/Models/AppPermissions");
 require("./Utils/Models/UserSettings");
@@ -26,9 +26,9 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
     db.once("open", function () {
       // Models
       const models = {
-        objects: {
-          model: mongoose.model("Objects"),
-          stream: db.collection("objects").watch(),
+        models: {
+          model: mongoose.model("Models"),
+          stream: db.collection("Models").watch(),
           listeners: {},
         },
         entries: {
@@ -80,13 +80,13 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
           }
         });
       };
-      models.entries.stream.on("change", (change) => {
-        models.entries.model.find({ objectId: "system-task" }).then((tasks) => {
+      models.objects.stream.on("change", (change) => {
+        models.objects.model.find({ objectId: "system-task" }).then((tasks) => {
           processTasks(tasks);
         });
       });
 
-      models.entries.model.find({ objectId: "system-task" }).then((tasks) => {
+      models.objects.model.find({ objectId: "system-task" }).then((tasks) => {
         processTasks(tasks);
       });
 

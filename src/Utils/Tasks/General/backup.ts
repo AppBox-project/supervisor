@@ -32,7 +32,7 @@ export default async (task, models) => {
   await task.save();
   await fs.writeFile(
     `${dir}Objects.json`,
-    JSON.stringify(await models.entries.model.find({})),
+    JSON.stringify(await models.objects.model.find({})),
     (err) => {
       if (err) console.log(err);
     }
@@ -45,7 +45,7 @@ export default async (task, models) => {
   await task.save();
   await fs.writeFile(
     `${dir}Models.json`,
-    JSON.stringify(await models.objects.model.find({})),
+    JSON.stringify(await models.models.model.find({})),
     (err) => {
       if (err) console.log(err);
     }
