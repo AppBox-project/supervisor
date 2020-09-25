@@ -5,7 +5,7 @@ import Axios from "axios";
 
 // Models
 require("./Utils/Models/Models");
-require("./Utils/Models/Entries");
+require("./Utils/Models/Objects");
 require("./Utils/Models/AppPermissions");
 require("./Utils/Models/UserSettings");
 
