@@ -28,12 +28,12 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
       const models = {
         models: {
           model: mongoose.model("Models"),
-          stream: db.collection("Models").watch(),
+          stream: db.collection("models").watch(),
           listeners: {},
         },
-        entries: {
-          model: mongoose.model("Entries"),
-          stream: db.collection("entries").watch(),
+        objects: {
+          model: mongoose.model("Objects"),
+          stream: db.collection("objects").watch(),
           listeners: {},
         },
         apppermissions: {
