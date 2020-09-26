@@ -73,6 +73,26 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
                   taskFunctions.general.updateApp(task, models);
                 }
                 break;
+              case "restart-system":
+                if (task.data.progress === 0) {
+                  taskFunctions.general.restartSystem(task, models);
+                }
+                break;
+              case "restart-supervisor":
+                if (task.data.progress === 0) {
+                  taskFunctions.general.restartSupervisor(task, models);
+                }
+                break;
+              case "restart-server":
+                if (task.data.progress === 0) {
+                  taskFunctions.general.restartServer(task, models);
+                }
+                break;
+              case "restart-engine":
+                if (task.data.progress === 0) {
+                  taskFunctions.general.restartEngine(task, models);
+                }
+                break;
               default:
                 systemLog(`Unknown task action ${task.data.action}`);
                 break;
