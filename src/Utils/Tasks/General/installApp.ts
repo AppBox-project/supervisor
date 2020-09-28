@@ -1,11 +1,10 @@
 var shell = require("shelljs");
 const axios = require("axios");
 var fs = require("fs");
-import { map } from "lodash";
-import { systemLog } from "../../../Utils/Functions/common";
+import { map, merge } from "lodash";
 
 export default async (task, models) => {
-  systemLog(`Starting install task for ${task.data.arguments.appId}`);
+  console.log(`Starting install task for ${task.data.arguments.appId}`);
 
   axios
     .get(
@@ -37,12 +36,13 @@ export default async (task, models) => {
       );
 
       // Step 3: Install all the default information from the manifest.
-      // 3.1 objects
-      if (manifest.defaultModels) {
-        const mergedModels = {
-          ...(manifest.defaultModels.required || {}),
-          ...(manifest.defaultModels.optional || {}),
-        }; // Combine the optional and the required model. The seperation only exists for updating. When installing no difference is required.
+      // 3.1 Models
+      if (manifest.data?.required?.models || manifest.data?.optional?.models) {
+        console.log("Models found. Loading data.");
+        const mergedModels = merge(
+          manifest.data.required.models,
+          manifest.data.optional.models
+        ); // Combine the optional and the required model. The seperation only exists for updating. When installing no difference is required.
         const count = Object.keys(mergedModels).length;
         task.data.state = `Installing ${count} ${
           count === 1 ? "model" : "models"
@@ -100,8 +100,10 @@ export default async (task, models) => {
       task.data.progress = 90;
       task.markModified("data");
       await task.save();
-      const newApp = await models.objects.model.create({
-        objectId: "app",
+
+      console.log("Install done. Registering new app.");
+      const newTask = await models.objects.model.create({
+        objectId: "apps",
         data: {
           id: task.data.arguments.appId,
           name: app.data.name,

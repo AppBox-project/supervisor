@@ -1,13 +1,11 @@
 var shell = require("shelljs");
-const axios = require("axios");
 var fs = require("fs");
-import { map } from "lodash";
-import { systemLog } from "../../../Utils/Functions/common";
+import { map, merge } from "lodash";
 
 export default async (task, models) => {
-  if (task.data.arguments.appId.match(/^[a-zA-Z-]*$/)) {
-    systemLog(`Starting uninstall task for ${task.data.arguments.appId}`);
+  console.log(`Starting uninstall task for ${task.data.arguments.appId}`);
 
+  if (task.data.arguments.appId.match(/^[a-zA-Z-]*$/)) {
     // Step 1: Read manifest
     task.data.state = "Parsing manifest";
     task.data.progress = 10;
@@ -21,11 +19,16 @@ export default async (task, models) => {
     );
 
     // 1.1 objects
-    if (manifest.defaultModels && task.data.arguments.removeData) {
-      const mergedModels = {
-        ...(manifest.defaultModels.required || {}),
-        ...(manifest.defaultModels.optional || {}),
-      }; // Combine the optional and the required model. The seperation only exists for updating. When installing no difference is required.
+    if (
+      manifest.data?.required?.models ||
+      (manifest.data?.optional?.models && task.data.arguments.removeData)
+    ) {
+      console.log("Uninstalling models.");
+
+      const mergedModels = merge(
+        manifest.data.required.models,
+        manifest.data.optional.models
+      ); // Combine the optional and the required model. The seperation only exists for updating. When installing no difference is required.
       const count = Object.keys(mergedModels).length;
 
       task.data.state = `Removing ${count} ${
@@ -66,7 +69,7 @@ export default async (task, models) => {
     task.markModified("data");
     await task.save();
     await models.objects.model.deleteOne({
-      objectId: "app",
+      objectId: "apps",
       "data.id": task.data.arguments.appId,
     });
 
@@ -77,7 +80,7 @@ export default async (task, models) => {
     task.markModified("data");
     task.save();
   } else {
-    systemLog(
+    console.log(
       `Security warning: ${task.data.arguments.appId} is not a valid app-id.`
     );
     task.data.state = "Error, check logs.";

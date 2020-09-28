@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-import { systemLog } from "./Utils/Functions/common";
 import taskFunctions from "./Utils/Tasks";
 import Axios from "axios";
 
@@ -14,7 +13,7 @@ require("./Utils/Models/UserSettings");
 // Connect to database and perform tasks.
 Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
   .then((res) => {
-    systemLog(`Looking for the database at: ${process.env.DBURL}`);
+    console.log(`Looking for the database at: ${process.env.DBURL}`);
     mongoose.connect(
       `mongodb://${process.env.DBURL || "localhost:27017"}/AppBox`,
       {
@@ -94,7 +93,7 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
                 }
                 break;
               default:
-                systemLog(`Unknown task action ${task.data.action}`);
+                console.log(`Unknown task action ${task.data.action}`);
                 break;
             }
           }
@@ -110,9 +109,9 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
         processTasks(tasks);
       });
 
-      systemLog("Watching and executing tasks");
+      console.log("Watching and executing tasks");
     });
   })
   .catch((err) => {
-    systemLog(`Oops. Database is offline.`);
+    console.log(`Oops. Database is offline.`);
   });
