@@ -42,11 +42,13 @@
     "runSiteServer": "DBURL=${DBURL:-localhost:27017} yarn --cwd ../SiteServer start",
     "build": "tsc",
     "watch-ts": "tsc -w",
+    "runAll": "URL=${DBURL:-localhost:27017} pm2 start ./pm2.json",
     "watch-node": "nodemon dist/supervisor.js",
-    "start": "DBURL=${DBURL:-localhost:27017} yarn runSupervisor & DBURL=${DBURL:-localhost:27017} yarn runServer & DBURL=${DBURL:-localhost:27017} yarn runEngine & DBURL=${DBURL:-localhost:27017} yarn runSiteServer",
+    "start": "DBURL=${DBURL:-localhost:27017} yarn runAll & yarn logs",
     "stop": "yarn stopSupervisor & yarn stopServer & yarn stopEngine",
     "restart": "DBURL=${DBURL:-localhost:27017} yarn restartSupervisor & DBURL=${DBURL:-localhost:27017} yarn restartServer & DBURL=${DBURL:-localhost:27017} yarn restartEngine",
     "status": "pm2 list",
+    "logs": "pm2 logs",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "develop": "yarn build && DBURL=${DBURL:-localhost:27017} yarn start"
   }

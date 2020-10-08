@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "name": "AppBox-Supervisor",
+      "script": "/AppBox/System/Supervisor/dist/supervisor.js",
+      "watch": true,
+      "exp_backoff_restart_delay": 10
+    },
+    {
+      "name": "AppBox-Server",
+      "script": "/AppBox/System/Server/dist/server.js",
+      "watch": true,
+      "exp_backoff_restart_delay": 10
+    },
+    {
+      "name": "AppBox-Engine",
+      "script": "/AppBox/System/Engine/dist/engine.js",
+      "watch": true,
+      "exp_backoff_restart_delay": 10
+    }
+  ]
+}
