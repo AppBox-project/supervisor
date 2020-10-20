@@ -4,19 +4,22 @@
       "name": "AppBox-Supervisor",
       "script": "/AppBox/System/Supervisor/dist/supervisor.js",
       "watch": true,
-      "exp_backoff_restart_delay": 10
+      "exp_backoff_restart_delay": 10,
+      "args": "--no-daemon"
     },
     {
       "name": "AppBox-Server",
       "script": "/AppBox/System/Server/dist/server.js",
       "watch": true,
-      "exp_backoff_restart_delay": 10
+      "exp_backoff_restart_delay": 10,
+      "args": "--no-daemon"
     },
     {
       "name": "AppBox-Engine",
       "script": "/AppBox/System/Engine/dist/engine.js",
       "watch": true,
-      "exp_backoff_restart_delay": 10
+      "exp_backoff_restart_delay": 10,
+      "args": "--no-daemon"
     }
   ]
 }
