@@ -25,8 +25,8 @@
   "scripts": {
     "prepareDb": "mongod --replSet \"rs\" --dbpath /AppBox/System/Database",
     "updateClient": "git -C /AppBox/System/Client pull && yarn --cwd ../Client install && yarn --cwd ../Client build",
-    "updateServer": "git -C /AppBox/System/Server reset --hard && git -C /AppBox/System/Server pull && yarn --cwd ../Server install",
-    "updateEngine": "git -C /AppBox/System/Engine reset --hard && git -C /AppBox/System/Engine pull && yarn --cwd ../Engine install",
+    "updateServer": "git -C /AppBox/System/Server reset --hard && git -C /AppBox/System/Server pull && yarn --cwd ../Server install && yarn --cwd ../Engine server",
+    "updateEngine": "git -C /AppBox/System/Engine reset --hard && git -C /AppBox/System/Engine pull && yarn --cwd ../Engine install && yarn --cwd ../Engine build",
     "updateSiteServer": "git -C /AppBox/System/SiteServer pull && yarn --cwd ../SiteServer install",
     "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull",
     "updateBox": "yarn updateClient && yarn updateServer && yarn updateSiteServer && yarn updateSupervisor",
