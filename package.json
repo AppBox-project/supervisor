@@ -28,7 +28,7 @@
     "updateServer": "git -C /AppBox/System/Server reset --hard && git -C /AppBox/System/Server pull && yarn --cwd ../Server install && yarn --cwd ../Engine server",
     "updateEngine": "git -C /AppBox/System/Engine reset --hard && git -C /AppBox/System/Engine pull && yarn --cwd ../Engine install && yarn --cwd ../Engine build",
     "updateSiteServer": "git -C /AppBox/System/SiteServer pull && yarn --cwd ../SiteServer install",
-    "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull",
+    "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull && yarn build",
     "updateBox": "yarn updateClient && yarn updateServer && yarn updateSiteServer && yarn updateSupervisor",
     "runSupervisor": "pm2 start dist/supervisor.js --no-daemon --watch --time --name=\"AppBox-Supervisor\" --exp-backoff-restart-delay=100",
     "stopSupervisor": "pm2 delete AppBox-Supervisor",
