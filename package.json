@@ -10,7 +10,7 @@
     "express": "^4.17.1",
     "forever-monitor": "^3.0.1",
     "lodash": "^4.17.19",
-    "mongoose": "^5.8.10",
+    "mongoose": "^5.10.11",
     "nunjucks": "^3.2.0",
     "shelljs": "^0.8.3",
     "socket.io": "^2.3.0",
