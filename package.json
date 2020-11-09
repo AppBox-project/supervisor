@@ -11,10 +11,12 @@
     "forever-monitor": "^3.0.1",
     "lodash": "^4.17.19",
     "mongoose": "^5.8.10",
+    "nodemon": "^2.0.6",
     "nunjucks": "^3.2.0",
     "shelljs": "^0.8.3",
     "socket.io": "^2.3.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "yaml": "^1.10.0"
   },
   "name": "appbox-supervisor",
   "version": "0.0.1",
@@ -30,6 +32,7 @@
     "updateSiteServer": "git -C /AppBox/System/SiteServer pull && yarn --cwd ../SiteServer install",
     "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull && yarn build && restartSupervisor",
     "updateBox": "yarn updateClient && yarn updateServer && yarn updateEngine && yarn updateSiteServer && yarn updateSupervisor",
+    "buildClient": "yarn --cwd ../Client build",
     "runSupervisor": "pm2 start dist/supervisor.js --no-daemon --watch --time --name=\"AppBox-Supervisor\" --exp-backoff-restart-delay=100",
     "stopSupervisor": "pm2 delete AppBox-Supervisor",
     "restartSupervisor": "pm2 restart AppBox-Supervisor",
@@ -46,10 +49,10 @@
     "watch-node": "nodemon dist/supervisor.js",
     "start": "DBURL=${DBURL:-localhost:27017} yarn runAll & yarn logs",
     "stop": "yarn stopSupervisor & yarn stopServer & yarn stopEngine",
-    "restart": "DBURL=${DBURL:-localhost:27017} yarn restartSupervisor & DBURL=${DBURL:-localhost:27017} yarn restartServer & DBURL=${DBURL:-localhost:27017} yarn restartEngine",
+    "restart": "DBURL=${DBURL:-localhost:27017} yarn restartSupervisor & DBURL=${DBURL:-localhost:27017} yarn restartServer & DBURL=${DBURL:-localhost:27017} yarn restartEngine && yarn logs",
     "status": "pm2 list",
     "logs": "pm2 logs --time --merge-logs",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "develop": "yarn build && DBURL=${DBURL:-localhost:27017} yarn start"
+    "develop": "yarn build && DBURL=${DBURL:-localhost:27017} nodemon ./src/supervisor.ts"
   }
 }
