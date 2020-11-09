@@ -82,7 +82,7 @@ export default async (oldTask, models) => {
     }, script.steps[0]);
 
     // Done following install script. Recompile client.
-    await updateTask(task, 60, "Compiling.. Grab a cup ☕");
+    await updateTask(task, 60, "Compiling... Grab a cup ☕");
     await shell.exec("yarn buildClient");
     await updateTask(task, 100, "Installation complete!");
   } else {

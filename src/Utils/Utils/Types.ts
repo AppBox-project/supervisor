@@ -1,5 +1,4 @@
 import { Mongoose } from "mongoose";
-import Server from "./Server";
 
 // Model types
 export interface ModelType {
