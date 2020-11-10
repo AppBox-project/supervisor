@@ -9,23 +9,29 @@ export default (
 ) =>
   new Promise(async (resolve, reject) => {
     console.log(`App install script installs model ${args.model}`);
-    await updateTask(
-      `Creating ${data.models[args.model].name_plural} (${args.model})`
-    );
+    if (data.models[args.model]) {
+      await updateTask(
+        `Creating ${data.models[args.model].name_plural} (${args.model})`
+      );
 
-    // Step #1: check if model exists
-    const existingModel = await models.models.model.findOne({
-      key: args.model,
-    });
-    if (existingModel) {
+      // Step #1: check if model exists
+      const existingModel = await models.models.model.findOne({
+        key: args.model,
+      });
+      if (existingModel) {
+        console.error(`Model ${args.model} already exists.`);
+        resolve();
+        return;
+      }
+
+      await new models.models.model({
+        ...data.models[args.model],
+        key: args.model,
+      }).save();
+
       resolve();
-      return;
+    } else {
+      console.error(`Model ${args.model} does not exist in install script.`);
+      resolve();
     }
-
-    await new models.models.model({
-      ...data.models[args.model],
-      key: args.model,
-    }).save();
-
-    resolve();
   });
