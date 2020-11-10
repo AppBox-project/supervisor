@@ -67,9 +67,9 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
                   taskFunctions.general.uninstallApp(task, models);
                 }
                 break;
-              case "app-update":
+              case "update-apps":
                 if (task.data.progress === 0) {
-                  taskFunctions.general.updateApp(task, models);
+                  taskFunctions.general.updateApps(task, models);
                 }
                 break;
               case "restart-system":

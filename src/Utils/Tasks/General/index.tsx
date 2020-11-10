@@ -1,6 +1,6 @@
 import installApp from "./installApp";
 import uninstallApp from "./uninstallApp";
-import updateApp from "./updateApp";
+import updateApps from "./updateApps";
 import backup from "./backup";
 import {
   restartSystem,
@@ -12,7 +12,7 @@ import {
 export default {
   backup,
   installApp,
-  updateApp,
+  updateApps,
   uninstallApp,
   restartSystem,
   restartSupervisor,

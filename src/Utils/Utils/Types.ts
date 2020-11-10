@@ -31,6 +31,7 @@ export interface ModelType {
     archive: string[];
     archiveOwn: string[];
   };
+  handlers: { [key: string]: string };
   _id: any;
 }
 

@@ -1,9 +1,9 @@
-import { map, merge } from "lodash";
+import { map } from "lodash";
 const YAML = require("yaml");
 const fs = require("fs");
 var shell = require("shelljs");
 const axios = require("axios");
-import installScriptFunctions from "./InstallScript";
+import installScriptFunctions from "./InstallScript/install";
 
 export default async (oldTask, models) => {
   // Vars
@@ -62,6 +62,7 @@ export default async (oldTask, models) => {
       let args = {
         info: script.info,
         key: oldTask.data.arguments.app.data.key,
+        choices: oldTask.data.arguments.choices,
       };
       if (typeof step === "object") {
         action = step.action;
@@ -78,9 +79,9 @@ export default async (oldTask, models) => {
         args,
         models,
         data,
-        (state: string) => {
+        async (state: string) => {
           currentPercentage += stepSize;
-          updateTask(task, currentPercentage, state);
+          await updateTask(task, currentPercentage, state);
         }
       );
     }, script.steps[0]);
@@ -98,6 +99,7 @@ export default async (oldTask, models) => {
         let args = {
           info: script.info,
           key: oldTask.data.arguments.app.data.key,
+          choices: oldTask.data.arguments.choices,
         };
         if (typeof step === "object") {
           action = step.action;
@@ -114,9 +116,9 @@ export default async (oldTask, models) => {
           args,
           models,
           data,
-          (state: string) => {
+          async (state: string) => {
             currentPercentage += stepSize;
-            updateTask(task, currentPercentage, state);
+            await updateTask(task, currentPercentage, state);
           }
         );
       },
@@ -125,7 +127,7 @@ export default async (oldTask, models) => {
 
     await updateTask(task, 100, "Installation complete!");
   } else {
-    updateTask(task, 0, "Error: install script missing from app.");
+    await updateTask(task, 0, "Error: install script missing from app.");
   }
 };
 
