@@ -31,7 +31,7 @@ export default async (oldTask, models) => {
 
   if (fs.existsSync(`${dir}/install.yml`)) {
     // Execute installscript
-    await updateTask(task, 20, "Running pre-install");
+    await updateTask(task, 20, "Running pre-install scripts");
 
     const file = fs.readFileSync(`${dir}/install.yml`, "utf8");
     const installScript = YAML.parse(file);
@@ -70,6 +70,10 @@ export default async (oldTask, models) => {
         action = step;
       }
 
+      if (!installScriptFunctions[action]) {
+        console.error(`Install script step ${action} not found.`);
+        return false;
+      }
       return await installScriptFunctions[action](
         args,
         models,
@@ -84,6 +88,41 @@ export default async (oldTask, models) => {
     // Done following install script. Recompile client.
     await updateTask(task, 60, "Compiling... Grab a cup ☕");
     await shell.exec("yarn buildClient");
+
+    // Run post-install
+    await updateTask(task, 80, "Running post-install scripts");
+    await (script["post-install"] as { action: string }[]).reduce(
+      async (prev, step) => {
+        await prev;
+        let action;
+        let args = {
+          info: script.info,
+          key: oldTask.data.arguments.app.data.key,
+        };
+        if (typeof step === "object") {
+          action = step.action;
+          args = { ...args, ...step };
+        } else {
+          action = step;
+        }
+
+        if (!installScriptFunctions[action]) {
+          console.error(`Install script step ${action} not found.`);
+          return false;
+        }
+        return await installScriptFunctions[action](
+          args,
+          models,
+          data,
+          (state: string) => {
+            currentPercentage += stepSize;
+            updateTask(task, currentPercentage, state);
+          }
+        );
+      },
+      script["post-install"][0]
+    );
+
     await updateTask(task, 100, "Installation complete!");
   } else {
     updateTask(task, 0, "Error: install script missing from app.");
