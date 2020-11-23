@@ -52,42 +52,47 @@ export default async (oldTask, models) => {
     }
 
     // Execute the install script
-    const script = installScript[scriptVersion];
-    const data = installScript.data;
-    let currentPercentage = 20;
-    const stepSize = 20 / (script?.steps || []).length;
-    await ((script.steps as { action: string }[]) || []).reduce(
-      async (prev, step) => {
-        await prev;
-        let action;
-        let args = {
-          info: script.info,
-          key: oldTask.data.arguments.app.data.key,
-          choices: oldTask.data.arguments.choices,
-        };
-        if (typeof step === "object") {
-          action = step.action;
-          args = { ...args, ...step };
-        } else {
-          action = step;
-        }
+    const script = installScript[scriptVersion || "script"];
 
-        if (!installScriptFunctions[action]) {
-          console.error(`Install script step ${action} not found.`);
-          return false;
-        }
-        return await installScriptFunctions[action](
-          args,
-          models,
-          data,
-          async (state: string) => {
-            currentPercentage += stepSize;
-            await updateTask(task, currentPercentage, state);
+    const data = installScript.data;
+    console.log(script, data);
+
+    if (script.steps) {
+      let currentPercentage = 20;
+      const stepSize = 20 / (script?.steps || []).length;
+      await ((script.steps as { action: string }[]) || []).reduce(
+        async (prev, step) => {
+          await prev;
+          let action;
+          let args = {
+            info: script.info,
+            key: oldTask.data.arguments.app.data.key,
+            choices: oldTask.data.arguments.choices,
+          };
+          if (typeof step === "object") {
+            action = step.action;
+            args = { ...args, ...step };
+          } else {
+            action = step;
           }
-        );
-      },
-      (script || []).steps[0]
-    );
+
+          if (!installScriptFunctions[action]) {
+            console.error(`Install script step ${action} not found.`);
+            return false;
+          }
+          return await installScriptFunctions[action](
+            args,
+            models,
+            data,
+            async (state: string) => {
+              currentPercentage += stepSize;
+              await updateTask(task, currentPercentage, state);
+            }
+          );
+        },
+        (script || []).steps[0]
+      );
+    }
 
     // Done following install script. Recompile client.
     await updateTask(task, 60, "Compiling... Grab a cup ☕");
