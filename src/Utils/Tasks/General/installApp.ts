@@ -86,7 +86,7 @@ export default async (oldTask, models) => {
           }
         );
       },
-      script.steps[0]
+      (script || []).steps[0]
     );
 
     // Done following install script. Recompile client.
