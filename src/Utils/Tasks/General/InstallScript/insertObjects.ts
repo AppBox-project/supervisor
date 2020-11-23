@@ -1,4 +1,4 @@
-import { AppBoxData } from "../../../Utils/Types";
+import { AppBoxData } from "appbox-types";
 
 // This function registers data inside default objects.
 export const install = (
