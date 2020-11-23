@@ -56,9 +56,9 @@ export default async (oldTask, models) => {
 
     const data = installScript.data;
     console.log(script, data);
+    let currentPercentage = 20;
 
     if (script.steps) {
-      let currentPercentage = 20;
       const stepSize = 20 / (script?.steps || []).length;
       await ((script.steps as { action: string }[]) || []).reduce(
         async (prev, step) => {
@@ -100,6 +100,8 @@ export default async (oldTask, models) => {
 
     // Run post-install
     await updateTask(task, 80, "Running post-install scripts");
+    const stepSize = 20 / (script?.postInstall || []).length;
+
     await (script["post-install"] as { action: string }[]).reduce(
       async (prev, step) => {
         await prev;
