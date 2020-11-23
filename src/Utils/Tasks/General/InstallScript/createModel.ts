@@ -1,5 +1,5 @@
 import { map } from "lodash";
-import { AppBoxData, ModelType } from "../../../Utils/Types";
+import { ModelType, AppBoxData } from "appbox-types";
 
 // Install
 export const install = (
@@ -102,6 +102,31 @@ export const update = (
         oldModel.markModified(`handlers.${key}`);
       } else {
         // Todo: If a handler has changed, gracefully decide what version to apply.
+      }
+    });
+
+    // Loop through lists and see what's missing / changed.
+    map(newModel.lists, (list, key) => {
+      if (!(oldModel.lists || {})[key]) {
+        if (!oldModel.lists) oldModel.lists = {};
+        console.log(`Model ${newModel.name} has a new list: ${key}`);
+        oldModel.lists[key] = newModel.lists[key];
+        oldModel.markModified(`lists.${key}`);
+      } else {
+        // Todo: If a list has changed, gracefully decide what version to apply.
+      }
+    });
+
+    // Loop through rules and see what's missing / changed.
+    map(newModel.rules, (rules, key) => {
+      if (!(oldModel.rules || {})[key]) {
+        if (!oldModel.rules) oldModel.rules = {};
+
+        console.log(`Model ${newModel.name} has a new rule: ${key}`);
+        oldModel.rules[key] = newModel.rules[key];
+        oldModel.markModified(`rules.${key}`);
+      } else {
+        // Todo: If a rule has changed, gracefully decide what version to apply.
       }
     });
 

@@ -1,4 +1,4 @@
-import { AppBoxData } from "../../../Utils/Types";
+import { AppBoxData } from "appbox-types";
 
 // Install script
 export const install = (

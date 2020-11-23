@@ -55,7 +55,7 @@ export default async (oldTask, models) => {
     const script = installScript[scriptVersion];
     const data = installScript.data;
     let currentPercentage = 20;
-    const stepSize = 20 / script.steps.length;
+    const stepSize = 20 / (script?.steps || []).length;
     await (script.steps as { action: string }[]).reduce(async (prev, step) => {
       await prev;
       let action;
