@@ -20,6 +20,13 @@
       "watch": true,
       "exp_backoff_restart_delay": 10,
       "args": "--no-daemon"
+    },
+    {
+      "name": "AppBox-App-Server",
+      "script": "/AppBox/System/App-Server/dist/server.js",
+      "watch": true,
+      "exp_backoff_restart_delay": 10,
+      "args": "--no-daemon"
     }
   ]
 }
