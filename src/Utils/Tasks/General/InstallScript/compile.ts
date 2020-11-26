@@ -8,7 +8,7 @@ export const install = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Compiling.`);
     await updateTask("Compiling... Grab a cup. ☕");
     await shell.exec(`yarn buildClient`);
@@ -22,7 +22,7 @@ export const update = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     await updateTask("Compiling... Grab a cup. ☕");
     await shell.exec(`yarn buildClient`);
     resolve();

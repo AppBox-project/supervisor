@@ -15,7 +15,7 @@ export const install = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Registering app ${args.key}.`);
 
     await updateTask("Registering...");
@@ -57,7 +57,7 @@ export const update = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     const oldApp = await models.objects.model.findOne({
       objectId: "apps",
       "data.id": args.key,

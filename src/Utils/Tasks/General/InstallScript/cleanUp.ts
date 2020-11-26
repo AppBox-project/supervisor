@@ -8,7 +8,7 @@ export const install = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Cleaning up.`);
     await updateTask("Cleaning up...");
     await shell.rm(`-rf`, `/AppBox/System/Temp/${args.key}`);
@@ -22,7 +22,7 @@ export const update = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Cleaning up.`);
     await updateTask("Cleaning up...");
     await shell.rm(`-rf`, `/AppBox/System/Temp/${args.key}`);

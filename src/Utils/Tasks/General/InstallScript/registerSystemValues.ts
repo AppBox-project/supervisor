@@ -14,7 +14,7 @@ export const install = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log("Registering system values");
     const values = args.values;
 
@@ -95,7 +95,7 @@ export const update = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Checking for system value updates`);
     const values = args.values;
 

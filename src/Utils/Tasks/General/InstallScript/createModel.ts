@@ -8,7 +8,7 @@ export const install = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`App install script installs model ${args.model}`);
     if (data.models[args.model]) {
       await updateTask(
@@ -45,7 +45,7 @@ export const update = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Checking for model updates for ${args.model}.`);
     const oldModel = await models.models.model.findOne({ key: args.model });
     const newModel: ModelType = data.models[args.model];

@@ -159,7 +159,7 @@ export default async (oldTask, models) => {
 };
 
 const updateTask = (task, progress: number, state: string) =>
-  new Promise(async (resolve) => {
+  new Promise<void>(async (resolve) => {
     task.data.progress = Math.floor(progress);
     task.data.state = state;
     task.markModified("data.state");

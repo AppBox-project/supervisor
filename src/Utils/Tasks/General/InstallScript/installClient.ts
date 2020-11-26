@@ -8,7 +8,7 @@ export const install = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Installing client code from folder ${args.folder}.`);
     await updateTask("Installing client.");
     // Step 1: copy client code from /System/Temp to /AppBox/System/Client/Apps-User
@@ -28,7 +28,7 @@ export const update = (
   data: { objects: {}; models: {} },
   updateTask: (state: string) => void
 ) =>
-  new Promise(async (resolve, reject) => {
+  new Promise<void>(async (resolve, reject) => {
     console.log(`Updating client code from folder ${args.folder}.`);
     await updateTask("Installing client.");
     // Step 1: copy client code from /System/Temp to /AppBox/System/Client/Apps-User
