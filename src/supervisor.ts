@@ -7,6 +7,8 @@ require("./Utils/Models/Models");
 require("./Utils/Models/Objects");
 require("./Utils/Models/AppPermissions");
 require("./Utils/Models/UserSettings");
+require("./Utils/Models/SystemSettings");
+require("./Utils/Models/AppSettings");
 
 // Step 1: Launch child processes
 
@@ -40,6 +42,12 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
         },
         usersettings: {
           model: mongoose.model("UserSettings"),
+        },
+        systemsettings: {
+          model: mongoose.model("SystemSettings"),
+        },
+        appsettings: {
+          model: mongoose.model("AppSettings"),
         },
       };
 

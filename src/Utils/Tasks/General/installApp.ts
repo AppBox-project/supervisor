@@ -7,7 +7,7 @@ import installScriptFunctions from "./InstallScript/install";
 
 export default async (oldTask, models) => {
   // Vars
-  const dir = `/AppBox/System/Client/src/Apps-User/${oldTask.data.arguments.app.data.key}`;
+  const dir = `/AppBox/System/Temp/Apps/${oldTask.data.arguments.app.data.key}`;
   let result;
   console.log(
     `Starting install task for`,
@@ -20,13 +20,13 @@ export default async (oldTask, models) => {
 
   // Download
   result = await shell.exec(
-    `git -C /AppBox/System/Client/src/Apps-User clone ${oldTask.data.arguments.app.data.repository} ${oldTask.data.arguments.app.data.key}`
+    `git -C /AppBox/System/Temp/Apps clone ${oldTask.data.arguments.app.data.repository} ${oldTask.data.arguments.app.data.key}`
   );
 
   if (result.code === 128) {
     // Folder was alread there.
     await updateTask(task, 8, "Old code found. Checking updates.");
-    await shell.exec(`git -C /AppBox/System/Client/src/Apps-User pull`);
+    await shell.exec(`git -C ${dir} pull`);
   }
 
   if (fs.existsSync(`${dir}/install.yml`)) {
@@ -55,54 +55,10 @@ export default async (oldTask, models) => {
     const script = installScript[scriptVersion || "script"];
 
     const data = installScript.data;
-    console.log(script, data);
     let currentPercentage = 20;
 
-    if (script.steps) {
-      const stepSize = 20 / (script?.steps || []).length;
-      await ((script.steps as { action: string }[]) || []).reduce(
-        async (prev, step) => {
-          await prev;
-          let action;
-          let args = {
-            info: script.info,
-            key: oldTask.data.arguments.app.data.key,
-            choices: oldTask.data.arguments.choices,
-          };
-          if (typeof step === "object") {
-            action = step.action;
-            args = { ...args, ...step };
-          } else {
-            action = step;
-          }
-
-          if (!installScriptFunctions[action]) {
-            console.error(`Install script step ${action} not found.`);
-            return false;
-          }
-          return await installScriptFunctions[action](
-            args,
-            models,
-            data,
-            async (state: string) => {
-              currentPercentage += stepSize;
-              await updateTask(task, currentPercentage, state);
-            }
-          );
-        },
-        (script || []).steps[0]
-      );
-    }
-
-    // Done following install script. Recompile client.
-    await updateTask(task, 60, "Compiling... Grab a cup ☕");
-    await shell.exec("yarn buildClient");
-
-    // Run post-install
-    await updateTask(task, 80, "Running post-install scripts");
-    const stepSize = 20 / (script?.postInstall || []).length;
-
-    await (script["post-install"] as { action: string }[]).reduce(
+    const stepSize = 80 / (script || []).length;
+    await ((script as { action: string }[]) || []).reduce(
       async (prev, step) => {
         await prev;
         let action;
@@ -132,12 +88,20 @@ export default async (oldTask, models) => {
           }
         );
       },
-      script["post-install"][0]
+      (script || [])[0]
     );
+    console.log("Done");
 
+    // Done following install script
     await updateTask(task, 100, "Installation complete!");
   } else {
-    await updateTask(task, 0, "Error: install script missing from app.");
+    task.data.progress = 0;
+    task.data.state = "Install script missing";
+    task.data.error = true;
+    task.markModified("data.state");
+    task.markModified("data.error");
+    task.markModified("data.progress");
+    await task.save();
   }
 };
 
