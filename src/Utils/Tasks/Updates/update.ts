@@ -49,20 +49,19 @@ export default async (task, models) => {
     result = await shell.exec("yarn --cwd ../Engine install");
   }
 
-
-  // Step 4: SiteServer
-  task.data.state = "Looking for SiteServer updates";
+  // Step 4: App-Server
+  task.data.state = "Looking for App-Server updates";
   task.data.progress = 75;
   task.markModified("data");
   await task.save();
 
-  result = await shell.exec("git -C /AppBox/System/SiteServer pull");
+  result = await shell.exec("git -C /AppBox/System/App-Server pull");
   if (!result.match("up to date")) {
-    task.data.state = "SiteServer: Installing dependencies";
+    task.data.state = "App-Server: Installing dependencies";
     task.data.progress = 80;
     task.markModified("data");
     await task.save();
-    result = await shell.exec("yarn --cwd ../Server install");
+    result = await shell.exec("yarn --cwd ../App-Server install");
   }
 
   // Step 5: Supervisor
