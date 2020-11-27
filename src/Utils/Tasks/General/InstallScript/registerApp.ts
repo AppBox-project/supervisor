@@ -9,6 +9,7 @@ export const install = (
       name: string;
       icon: string;
       color: { r: number; g: number; b: number };
+      repository: string;
     };
   },
   models: AppBoxData,
@@ -35,6 +36,7 @@ export const install = (
           icon: args.info.icon,
           color: { ...args.info.color, a: 1 },
           id: args.key,
+          repository: args.info.repository,
           choices: args.choices,
         },
       }).save();
@@ -65,7 +67,11 @@ export const update = (
     let hasChanged = false;
     ["name", "icon", "color"].map((p) => {
       if (oldApp.data[p] !== args.info[p]) {
-        oldApp.data[p] = args.info[p];
+        if (p === "color") {
+          oldApp.data[p] = args.info[p];
+        } else {
+          oldApp.data[p] = { ...args.info.color, a: 1 };
+        }
         oldApp.markModified(`data.${p}`);
         console.log(`(${args.info.name}) Registry: updated ${p}`);
         hasChanged = true;

@@ -2,7 +2,6 @@ import { map } from "lodash";
 const YAML = require("yaml");
 const fs = require("fs");
 var shell = require("shelljs");
-const axios = require("axios");
 import installScriptFunctions from "./InstallScript/install";
 
 export default async (oldTask, models) => {

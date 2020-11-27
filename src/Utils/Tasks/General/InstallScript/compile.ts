@@ -23,7 +23,6 @@ export const update = (
   updateTask: (state: string) => void
 ) =>
   new Promise<void>(async (resolve, reject) => {
-    await updateTask("Compiling... Grab a cup. ☕");
-    await shell.exec(`yarn buildClient`);
+    // We don't compile on an update, because that happens when all updates are complete.
     resolve();
   });
