@@ -141,6 +141,11 @@ const updateTask = (task, progress: number, state: string) =>
     task.data.state = state;
     task.markModified("data.state");
     task.markModified("data.progress");
+    if (progress === 100) {
+      task.data.done = true;
+      task.markModified("data.done");
+    }
+
     await task.save();
     resolve();
   });
