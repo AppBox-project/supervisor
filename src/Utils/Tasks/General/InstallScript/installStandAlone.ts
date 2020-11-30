@@ -27,12 +27,12 @@ export const install = (
     });
     // Create a .env file
     shell.exec(
-      `printf 'REACT_APP_URL=${url.value}\nREACT_APP_SECRET=${appId}' >/AppBox/Files/Apps/${args.key}/${args.folder}/.env`
+      `printf 'REACT_APP_URL=${url.value}\nREACT_APP_SECRET=${appId}\nREACT_APP_NAME=${args.folder}' >/AppBox/Files/Apps/${args.key}/${args.folder}/.env`
     );
     // Save defaultConfig to the server
     await models.appsettings.model.create({
-      key: `standaloneConfig-${appId}`,
-      value: args.defaultConfig,
+      key: `standaloneConfig-${args.folder}`,
+      value: { ...args.defaultConfig, secret: appId },
     });
 
     resolve();
