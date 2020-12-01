@@ -45,3 +45,27 @@ export const update = (
 
     resolve();
   });
+
+// Uninstall
+export const uninstall = (
+  args: {
+    values: { people?: { types: string[] } };
+    info: {
+      name: string;
+      icon: string;
+      color: { r: number; g: number; b: number };
+    };
+  },
+  models: AppBoxData,
+  data: { objects: {}; models: {} },
+  updateTask: (state: string) => void
+) =>
+  new Promise<void>(async (resolve, reject) => {
+    console.log(`Removing objects`);
+    const objects = data.objects;
+
+    // People
+    console.log("todo");
+
+    resolve();
+  });

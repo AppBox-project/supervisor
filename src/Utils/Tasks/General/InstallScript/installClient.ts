@@ -40,3 +40,18 @@ export const update = (
     );
     resolve();
   });
+
+// Uninstall script
+export const uninstall = (
+  args: { folder: string; key: string },
+  models: AppBoxData,
+  data: { objects: {}; models: {} },
+  updateTask: (state: string) => void
+) =>
+  new Promise<void>(async (resolve, reject) => {
+    console.log(`Uninstalling client code from folder ${args.folder}.`);
+    await updateTask("Uninstalling client.");
+    // Step 1: copy client code from /System/Temp to /AppBox/System/Client/Apps-User
+    await shell.exec(`rm -rf /AppBox/System/Client/src/Apps-User/${args.key}`);
+    resolve();
+  });

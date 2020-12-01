@@ -132,3 +132,35 @@ export const update = (
 
     resolve();
   });
+
+// Uninstall
+export const uninstall = (
+  args: { model?: string; dataAction: "delete" | "deleteAndBackup" | "keep" },
+  models: AppBoxData,
+  data: { objects: {}; models: {} },
+  updateTask: (state: string) => void
+) =>
+  new Promise<void>(async (resolve, reject) => {
+    if (args.dataAction === "keep") {
+      console.log(`Not deleting ${args.model}, since user chose for 'keep'.`);
+    } else {
+      console.log(`Deleting model ${args.model}`);
+      if (data.models[args.model]) {
+        await updateTask(
+          `Deleting ${data.models[args.model].name_plural} (${args.model})`
+        );
+
+        await models.models.model.deleteOne({
+          key: args.model,
+        });
+        await models.objects.model.deleteMany({
+          objectId: args.model,
+        });
+
+        resolve();
+      } else {
+        console.error(`Model ${args.model} does not exist in install script.`);
+        resolve();
+      }
+    }
+  });

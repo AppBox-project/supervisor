@@ -81,3 +81,29 @@ export const update = (
 
     resolve();
   });
+
+// Uninstall
+export const uninstall = (
+  args: {
+    model?: string;
+    key: string;
+    info: {
+      name: string;
+      icon: string;
+      color: { r: number; g: number; b: number };
+    };
+  },
+  models: AppBoxData,
+  data: { objects: {}; models: {} },
+  updateTask: (state: string) => void
+) =>
+  new Promise<void>(async (resolve, reject) => {
+    console.log("Unregistering app");
+    updateTask("Unregistering apps");
+    await models.objects.model.deleteOne({
+      objectId: "apps",
+      "data.id": args.key,
+    });
+
+    resolve();
+  });

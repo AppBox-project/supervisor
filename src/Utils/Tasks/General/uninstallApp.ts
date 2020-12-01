@@ -1,91 +1,104 @@
+import { map } from "lodash";
+const YAML = require("yaml");
+const fs = require("fs");
 var shell = require("shelljs");
-var fs = require("fs");
-import { map, merge } from "lodash";
+import installScriptFunctions from "./InstallScript/uninstall";
 
 export default async (task, models) => {
-  console.log(`Starting uninstall task for ${task.data.arguments.appId}`);
+  // Vars
+  const dir = `/AppBox/System/Temp/Apps/${task.data.arguments.app.data.id}`;
+  let result;
+  console.log(`Commencing ${task.data.arguments.app.data.name} uninstall.`);
 
-  if (task.data.arguments.appId.match(/^[a-zA-Z-]*$/)) {
-    // Step 1: Read manifest
-    task.data.state = "Parsing manifest";
-    task.data.progress = 10;
-    task.markModified("data");
-    await task.save();
-    const manifest = JSON.parse(
-      await fs.readFileSync(
-        `/AppBox/System/Client/src/Apps-User/${task.data.arguments.appId}/manifest.json`,
-        "utf8"
-      )
-    );
+  // Announce that supervisor has started the work.
+  await updateTask(task, 5, "Started.");
 
-    // 1.1 objects
-    if (
-      manifest.data?.required?.models ||
-      (manifest.data?.optional?.models && task.data.arguments.removeData)
-    ) {
-      console.log("Uninstalling models.");
+  if (fs.existsSync(`${dir}/install.yml`)) {
+    // Execute installscript
+    await updateTask(task, 20, "Undoing install");
 
-      const mergedModels = merge(
-        manifest.data.required.models,
-        manifest.data.optional.models
-      ); // Combine the optional and the required model. The seperation only exists for updating. When installing no difference is required.
-      const count = Object.keys(mergedModels).length;
+    const file = fs.readFileSync(`${dir}/install.yml`, "utf8");
+    const installScript = YAML.parse(file);
 
-      task.data.state = `Removing ${count} ${
-        count === 1 ? "model" : "models"
-      }.`;
-      task.data.progress = 11;
-      task.markModified("data");
-      await task.save();
+    let scriptVersion = "script";
+    // In case there's multiple versions based on the choices the user made, pick the right script
+    if (installScript.versions) {
+      installScript.versions.map((version) => {
+        let match = true;
+        map(version.criteria, (value, key) => {
+          if (task.data.arguments.app.choices[key] != value) {
+            match = false;
+          }
+        });
 
-      // Loop through the merged model (optional and combined together) and
-      map(mergedModels, async (model, modelKey) => {
-        await models.models.model.deleteOne({ key: modelKey });
-        await models.objects.model.deleteMany({ objectId: modelKey });
+        if (match) scriptVersion = version.script;
       });
     }
 
-    // Todo: remove handlers, remove backend
+    // Execute the install script
+    const script = installScript[scriptVersion || "script"];
 
-    // Step 2: remove app
-    task.data.state = "Removing code";
-    task.data.progress = 20;
-    task.markModified("data");
-    await task.save();
-    shell.exec(
-      `rm -rf /AppBox/System/Client/src/Apps-User/${task.data.arguments.appId}`
+    const data = installScript.data;
+    let currentPercentage = 20;
+
+    const stepSize = 80 / (script || []).length;
+    await ((script as { action: string }[]) || []).reduce(
+      async (prev, step) => {
+        await prev;
+        let action;
+        let args = {
+          info: script.info,
+          key: task.data.arguments.app.data.id,
+          choices: task.data.arguments.app.choices,
+          dataAction: task.data.arguments.dataAction,
+        };
+        if (typeof step === "object") {
+          action = step.action;
+          args = { ...args, ...step };
+        } else {
+          action = step;
+        }
+
+        if (!installScriptFunctions[action]) {
+          console.error(`Uninstall script step ${action} not found.`);
+          return false;
+        }
+        return await installScriptFunctions[action](
+          args,
+          models,
+          data,
+          async (state: string) => {
+            currentPercentage += stepSize;
+            await updateTask(task, currentPercentage, state);
+          }
+        );
+      },
+      (script || [])[0]
     );
 
-    // Step 3: Recompile app
-    task.data.state = "Recompiling...";
-    task.data.progress = 50;
-    task.markModified("data");
-    await task.save();
-    shell.exec("yarn --cwd ../Client build");
-
-    // Step 4: Unregister app
-    task.data.state = "Unregistering app";
-    task.data.progress = 90;
-    task.markModified("data");
-    await task.save();
-    await models.objects.model.deleteOne({
-      objectId: "apps",
-      "data.id": task.data.arguments.appId,
-    });
-
-    // Done
-    task.data.state = "Done";
-    task.data.progress = 100;
-    task.data.done = true;
-    task.markModified("data");
-    task.save();
+    // Done following install script
+    await updateTask(task, 100, "Uninstall complete!");
   } else {
-    console.log(
-      `Security warning: ${task.data.arguments.appId} is not a valid app-id.`
-    );
-    task.data.state = "Error, check logs.";
-    task.data.progress = 99;
-    task.markModified("data");
+    task.data.progress = 0;
+    task.data.state = "Install script missing";
+    task.data.error = true;
+    task.markModified("data.state");
+    task.markModified("data.error");
+    task.markModified("data.progress");
     await task.save();
   }
 };
+
+const updateTask = (task, progress: number, state: string) =>
+  new Promise<void>(async (resolve) => {
+    task.data.progress = progress;
+    task.data.state = state;
+    task.markModified("data.state");
+    task.markModified("data.progress");
+    if (progress === 100) {
+      task.data.done = true;
+      task.markModified("data.done");
+    }
+    await task.save();
+    resolve();
+  });

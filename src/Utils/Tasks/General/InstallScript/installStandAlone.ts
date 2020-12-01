@@ -58,3 +58,20 @@ export const update = (
 
     resolve();
   });
+
+// Uninstall script
+export const uninstall = (
+  args: { folder: string; key: string; defaultConfig },
+  models: AppBoxData,
+  data: { objects: {}; models: {} },
+  updateTask: (state: string) => void
+) =>
+  new Promise<void>(async (resolve, reject) => {
+    console.log(`Uninstalling standalone code from folder ${args.folder}.`);
+    await updateTask(`Uninstalling standalone (${args.folder}).`);
+    // Step 1: copy client code from /System/Temp to /AppBox/Files/Apps
+    await shell.exec(`rm -rf /AppBox/Files/Apps/${args.key}/${args.folder}`);
+
+    // Todo: clean up settings and everything
+    resolve();
+  });
