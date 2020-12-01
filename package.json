@@ -14,7 +14,7 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/bcryptjs": "^2.4.2",
-    "@types/express": "^4.17.2",
+    "@types/express": "^4.17.9",
     "@types/lodash": "^4.14.149",
     "@types/socket.io": "^2.1.4",
     "appbox-types": "^0.0.7",
