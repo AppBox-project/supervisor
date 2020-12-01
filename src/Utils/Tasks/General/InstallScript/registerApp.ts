@@ -99,7 +99,7 @@ export const uninstall = (
 ) =>
   new Promise<void>(async (resolve, reject) => {
     console.log("Unregistering app");
-    updateTask("Unregistering apps");
+    await updateTask("Unregistering apps");
     await models.objects.model.deleteOne({
       objectId: "apps",
       "data.id": args.key,
