@@ -109,14 +109,14 @@ Axios.get(`http://${process.env.DBURL || "localhost:27017"}/AppBox`)
       };
       models.objects.stream.on("change", (change) => {
         models.objects.model
-          .find({ objectId: "system-tasks", "data.target": "Supervisor" })
+          .find({ objectId: "system-taskss", "data.target": "Supervisor" })
           .then((tasks) => {
             processTasks(tasks);
           });
       });
 
       models.objects.model
-        .find({ objectId: "system-tasks", "data.target": "Supervisor" })
+        .find({ objectId: "system-taskss", "data.target": "Supervisor" })
         .then((tasks) => {
           processTasks(tasks);
         });
