@@ -60,6 +60,6 @@
     "status": "pm2 list",
     "logs": "pm2 logs --time --merge-logs",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "develop": "yarn build && DBURL=${DBURL:-localhost:27017} nodemon ./src/supervisor.ts"
+    "develop": "nodemon src/supervisor.ts"
   }
 }

@@ -1,1 +1,4 @@
-export default { port: 8600, secret: "RC$vm4%*bFg2qWJuyfcf&KicWj7v@&tJ" };
+export default {
+  devMode: true,
+  secret: process.env.SECRET || "RC$vm4%*bFg2qWJuyfcf&KicWj7v@&tJ",
+};
