@@ -39,7 +39,7 @@
     "runAppServer": "DBURL=${DBURL:-localhost:27017} pm2 start /AppBox/System/App-Server/dist/server.js --no-daemon --watch --time --name=\"AppBox-App-Server\" --exp-backoff-restart-delay=100",
     "stopAppServer": "pm2 delete AppBox-App-Server",
     "restartAppServer": "pm2 restart AppBox-App-Server",
-    "runServer": "DBURL=${DBURL:-localhost:27017} pm2 start /AppBox/System/Server/dist/server.js --no-daemon --watch --time --name=\"AppBox-Server\" --exp-backoff-restart-delay=100",
+    "runServer": "DBURL=${DBURL:-localhost:27017} URL={PUBLICURL:-localhost:8600} pm2 start /AppBox/System/Server/dist/server.js --no-daemon --watch --time --name=\"AppBox-Server\" --exp-backoff-restart-delay=100",
     "stopServer": "pm2 delete AppBox-Server",
     "restartServer": "pm2 restart AppBox-Server",
     "runEngine": "DBURL=${DBURL:-localhost:27017} pm2 start /AppBox/System/Engine/dist/engine.js --no-daemon --watch --time --name=\"AppBox-Engine\" --exp-backoff-restart-delay=100",
