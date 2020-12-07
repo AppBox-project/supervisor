@@ -1,9 +1,17 @@
 import { AppBoxData } from "appbox-types";
+import { findIndex, forEach, map } from "lodash";
 
 // This function registers data inside default objects.
 export const install = (
   args: {
-    values: { people?: { types: string[] } };
+    values: {
+      people?: {
+        types: string[];
+        fields;
+        overviews: { [key: string]: {} };
+        layouts: { [key: string]: {} };
+      };
+    };
     info: {
       name: string;
       icon: string;
@@ -25,6 +33,54 @@ export const install = (
         key: "people",
       });
       let peopleModelHasChanged = false;
+
+      // Fields
+      if (people.fields) {
+        const fields: {
+          [key: string]: { name; type; typeArgs: { type; formula } };
+        } = people.fields;
+
+        map(fields, (field, fieldKey) => {
+          if (!currentPeopleModel.fields[fieldKey]) {
+            console.log(`Adding field ${fieldKey}`);
+            currentPeopleModel.fields[fieldKey] = field;
+            currentPeopleModel.markModified(`fields.${fieldKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Overviews
+      if (people.overviews) {
+        const overviews: {
+          [key: string]: {};
+        } = people.overviews;
+
+        map(overviews, (overview, overviewKey) => {
+          if (!currentPeopleModel.overviews[overviewKey]) {
+            console.log(`Adding overview ${overviewKey}`);
+            currentPeopleModel.overviews[overviewKey] = overview;
+            currentPeopleModel.markModified(`overviews.${overviewKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Layouts
+      if (people.layouts) {
+        const layouts: {
+          [key: string]: {};
+        } = people.layouts;
+
+        map(layouts, (layout, layoutKey) => {
+          if (!currentPeopleModel.layouts[layoutKey]) {
+            console.log(`Adding layout ${layoutKey}`);
+            currentPeopleModel.layouts[layoutKey] = layout;
+            currentPeopleModel.markModified(`layouts.${layoutKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
 
       // Types
       if (people.types) {
@@ -83,6 +139,11 @@ export const update = (
           withList?: boolean;
           listName?: string;
         }[];
+        overviews: { [key: string]: {} };
+        layouts: { [key: string]: {} };
+        fields: {
+          [key: string]: { name; type; typeArgs: { type; formula } };
+        };
       };
     };
     info: {
@@ -106,6 +167,55 @@ export const update = (
         key: "people",
       });
       let peopleModelHasChanged = false;
+
+      // Fields
+      if (people.fields) {
+        const fields: {
+          [key: string]: { name; type; typeArgs: { type; formula } };
+        } = people.fields;
+
+        map(fields, (field, fieldKey) => {
+          if (!currentPeopleModel.fields[fieldKey]) {
+            console.log(`Adding field ${fieldKey}`);
+            currentPeopleModel.fields[fieldKey] = field;
+            currentPeopleModel.markModified(`fields.${fieldKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Overviews
+      if (people.overviews) {
+        const overviews: {
+          [key: string]: {};
+        } = people.overviews;
+
+        map(overviews, (overview, overviewKey) => {
+          if (!currentPeopleModel.overviews[overviewKey]) {
+            console.log(`Adding overview ${overviewKey}`);
+            currentPeopleModel.overviews[overviewKey] = overview;
+            currentPeopleModel.markModified(`overviews.${overviewKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Layouts
+      if (people.layouts) {
+        const layouts: {
+          [key: string]: {};
+        } = people.layouts;
+
+        map(layouts, (layout, layoutKey) => {
+          if (!currentPeopleModel.layouts[layoutKey]) {
+            console.log(`Adding layout ${layoutKey}`);
+            currentPeopleModel.layouts[layoutKey] = layout;
+            currentPeopleModel.markModified(`layouts.${layoutKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
       // Types
       if (people.types) {
         //@ts-ignore
@@ -171,6 +281,11 @@ export const uninstall = (
           withList?: boolean;
           listName?: string;
         }[];
+        overviews: { [key: string]: {} };
+        layouts: { [key: string]: {} };
+        fields: {
+          [key: string]: { name; type; typeArgs: { type; formula } };
+        };
       };
     };
     info: {
@@ -186,7 +301,94 @@ export const uninstall = (
   new Promise<void>(async (resolve, reject) => {
     console.log(`Deleting system value updates`);
     const values = args.values;
-    console.log("Todo");
+    // People
+    if (values.people) {
+      const people = values.people;
+      const currentPeopleModel = await models.models.model.findOne({
+        key: "people",
+      });
+      let peopleModelHasChanged = false;
+
+      // Fields
+      if (people.fields) {
+        const fields: {
+          [key: string]: { name; type; typeArgs: { type; formula } };
+        } = people.fields;
+
+        map(fields, (field, fieldKey) => {
+          if (currentPeopleModel.fields[fieldKey]) {
+            console.log(`Deleting field ${fieldKey}`);
+            delete currentPeopleModel.fields[fieldKey];
+            currentPeopleModel.markModified(`fields.${fieldKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Overviews
+      if (people.overviews) {
+        const overviews: {
+          [key: string]: {};
+        } = people.overviews;
+
+        map(overviews, (overview, overviewKey) => {
+          if (currentPeopleModel.overviews[overviewKey]) {
+            console.log(`Deleting overview ${overviewKey}`);
+            delete currentPeopleModel.overviews[overviewKey];
+            currentPeopleModel.markModified(`overviews.${overviewKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Layouts
+      if (people.layouts) {
+        const layouts: {
+          [key: string]: {};
+        } = people.layouts;
+
+        map(layouts, (layout, layoutKey) => {
+          if (currentPeopleModel.layouts[layoutKey]) {
+            console.log(`Deleting layout ${layoutKey}`);
+            delete currentPeopleModel.layouts[layoutKey];
+            currentPeopleModel.markModified(`layouts.${layoutKey}`);
+            peopleModelHasChanged = true;
+          }
+        });
+      }
+
+      // Types
+      if (people.types) {
+        //@ts-ignore
+        const types: {
+          label: string;
+          key: string;
+          withList?: boolean;
+          listName?: string;
+        }[] = people.types;
+        types.map((type) => {
+          currentPeopleModel.fields.types.typeArgs.options.splice(
+            findIndex(
+              currentPeopleModel.fields.types.typeArgs.options,
+              (o: { key; label }) => o.key === type.key
+            ),
+            1
+          );
+
+          currentPeopleModel.markModified("fields.types.typeArgs.options");
+
+          if (type.withList) {
+            // This type came with a list. Remove it.
+            if ((currentPeopleModel.lists || [])[type.key]) {
+              delete currentPeopleModel.lists[type.key];
+              currentPeopleModel.markModified("fields.lists");
+            }
+          }
+        });
+      }
+
+      await currentPeopleModel.save();
+    }
 
     resolve();
   });

@@ -57,7 +57,6 @@ export default async (oldTask, models) => {
     let currentPercentage = 20;
 
     const stepSize = 80 / (script || []).length;
-    console.log(script, scriptVersion);
 
     await ((script as { action: string }[]) || []).reduce(
       async (prev, step) => {

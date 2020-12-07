@@ -21,8 +21,9 @@ console.log(
 
 mongoose.connect(`mongodb://${process.env.DBURL || "localhost:27017"}/AppBox`, {
   useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
+  readPreference: "primary",
+  appName: "AppBox-Server",
+  ssl: false,
 });
 var db = mongoose.connection;
 db.once("open", async function () {
