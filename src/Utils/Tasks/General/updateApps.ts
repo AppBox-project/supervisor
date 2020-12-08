@@ -133,6 +133,7 @@ export default async (oldTask, models) => {
   await updateTask(task, 80, "Compiling... Grab a cup ☕");
   await shell.exec("yarn buildClient");
   await updateTask(task, 100, "Updates complete!");
+  shell.exec("yarn restart");
 };
 
 const updateTask = (task, progress: number, state: string) =>

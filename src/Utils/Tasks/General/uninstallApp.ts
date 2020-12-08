@@ -78,6 +78,7 @@ export default async (task, models) => {
 
     // Done following install script
     await updateTask(task, 100, "Uninstall complete!");
+    shell.exec("yarn restart");
   } else {
     task.data.progress = 0;
     task.data.state = "Install script missing";
