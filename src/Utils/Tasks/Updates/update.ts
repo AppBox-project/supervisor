@@ -74,4 +74,5 @@ export default async (task, models) => {
   result = await shell.exec(
     "git -C /AppBox/System/Supervisor pull  && yarn --cwd /AppBox/System/Supervisor install"
   );
+  await shell.exec("yarn restart");
 };
