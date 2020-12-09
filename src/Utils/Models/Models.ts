@@ -35,6 +35,7 @@ mongoose.model(
         delete: { active: Boolean, endpoint: String, authentication: String },
       },
       layouts: {},
+      lists: {},
       actions: {},
       permissions: {
         read: [String],
