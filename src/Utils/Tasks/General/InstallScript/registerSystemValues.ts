@@ -39,8 +39,8 @@ export const install = (
         if (!originalModel.fields) originalModel.fields = {};
         if (!originalModel.fields[fieldKey]) {
           console.log(`Adding ${modelKey} field ${fieldKey}.`);
-          originalModel.lists[fieldKey] = field;
-          originalModel.markModified("lists");
+          originalModel.fields[fieldKey] = field;
+          originalModel.markModified("fields");
           modelHasChanged = true;
         }
       });
@@ -59,7 +59,6 @@ export const install = (
       // Layouts
       map(values?.layouts || {}, (layout, layoutKey) => {
         if (!originalModel.layouts) originalModel.layouts = {};
-
         if (!originalModel.layouts[layoutKey]) {
           console.log(`Adding ${modelKey} layout ${layoutKey}.`);
           originalModel.layouts[layoutKey] = layout;
@@ -74,7 +73,7 @@ export const install = (
         if (!originalModel.lists[listKey]) {
           console.log(`Adding ${modelKey} list ${listKey}.`);
           originalModel.lists[listKey] = list;
-          originalModel.markModified("layouts");
+          originalModel.markModified("lists");
           modelHasChanged = true;
         }
       });
@@ -149,10 +148,10 @@ export const update = (
 
       // Fields
       map(values?.fields || {}, (field, fieldKey) => {
-        if (!originalModel.lists[fieldKey]) {
+        if (!originalModel.fields[fieldKey]) {
           console.log(`Adding ${modelKey} field ${fieldKey}.`);
-          originalModel.lists[fieldKey] = field;
-          originalModel.markModified("lists");
+          originalModel.fields[fieldKey] = field;
+          originalModel.markModified("fields");
           modelHasChanged = true;
         }
       });
@@ -182,7 +181,7 @@ export const update = (
         if (!originalModel.lists[listKey]) {
           console.log(`Adding ${modelKey} list ${listKey}.`);
           originalModel.lists[listKey] = list;
-          originalModel.markModified("layouts");
+          originalModel.markModified("lists");
           modelHasChanged = true;
         }
       });
@@ -256,7 +255,7 @@ export const uninstall = (
         if (originalModel.fields[fieldKey]) {
           console.log(`Deleting ${modelKey} field ${fieldKey}.`);
           delete originalModel.fields[fieldKey];
-          originalModel.markModified("lists");
+          originalModel.markModified("fields");
           modelHasChanged = true;
         }
       });
