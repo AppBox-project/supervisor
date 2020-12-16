@@ -63,6 +63,9 @@ export default async (task, models) => {
     await task.save();
     result = await shell.exec("yarn --cwd ../App-Server install");
   }
+result = await shell.exec(
+    "git -C /AppBox/System/Supervisor pull  && yarn --cwd /AppBox/System/Supervisor install"
+  );
 
   // Step 5: Supervisor
   task.data.state = "Done";
@@ -71,8 +74,6 @@ export default async (task, models) => {
   task.markModified("data");
   await task.save();
 
-  result = await shell.exec(
-    "git -C /AppBox/System/Supervisor pull  && yarn --cwd /AppBox/System/Supervisor install"
-  );
+  
   await shell.exec("yarn restart");
 };
