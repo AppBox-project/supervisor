@@ -3,7 +3,7 @@
     "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "lodash": "^4.17.19",
-    "mongoose": "^5.8.10",
+    "mongoose": "^5.11.9",
     "shelljs": "^0.8.3",
     "uniqid": "^5.2.0",
     "yaml": "^1.10.0"
