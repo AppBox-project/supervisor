@@ -73,7 +73,4 @@ result = await shell.exec(
   task.data.done = true;
   task.markModified("data");
   await task.save();
-
-  
-  await shell.exec("yarn restart");
 };
