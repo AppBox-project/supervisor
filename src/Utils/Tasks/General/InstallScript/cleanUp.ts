@@ -10,8 +10,8 @@ export const install = (
 ) =>
   new Promise<void>(async (resolve, reject) => {
     console.log(`Cleaning up.`);
-    await updateTask("Cleaning up...");
-    await shell.rm(`-rf`, `/AppBox/System/Temp/${args.key}`);
+    //await updateTask("Cleaning up...");
+    //await shell.rm(`-rf`, `/AppBox/System/Temp/${args.key}`);
     resolve();
   });
 
@@ -24,8 +24,8 @@ export const update = (
 ) =>
   new Promise<void>(async (resolve, reject) => {
     console.log(`Cleaning up.`);
-    await updateTask("Cleaning up...");
-    await shell.rm(`-rf`, `/AppBox/System/Temp/${args.key}`);
+    //await updateTask("Cleaning up...");
+    //await shell.rm(`-rf`, `/AppBox/System/Temp/${args.key}`);
     resolve();
   });
 
@@ -38,7 +38,7 @@ export const uninstall = (
 ) =>
   new Promise<void>(async (resolve, reject) => {
     console.log(`Cleaning up.`);
-    await updateTask("Cleaning up...");
-    await shell.exec(`rm -rf /AppBox/System/Temp/${args.key}`);
+    //await updateTask("Cleaning up...");
+    //await shell.exec(`rm -rf /AppBox/System/Temp/${args.key}`);
     resolve();
   });
