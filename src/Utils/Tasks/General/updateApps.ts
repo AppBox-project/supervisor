@@ -119,7 +119,7 @@ export default async (oldTask, models) => {
       // Done following install script
       await updateTask(task, 100, "Installation complete!");
     } else {
-      task.data.progress = 0;
+      task.data.progress = -1;
       task.data.state = "Install script missing";
       task.data.error = true;
       task.markModified("data.state");
@@ -133,7 +133,6 @@ export default async (oldTask, models) => {
   await updateTask(task, 80, "Compiling... Grab a cup ☕");
   await shell.exec("yarn buildClient");
   await updateTask(task, 100, "Updates complete!");
-  shell.exec("yarn restart");
 };
 
 const updateTask = (task, progress: number, state: string) =>
