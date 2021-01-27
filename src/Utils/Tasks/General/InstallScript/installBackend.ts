@@ -13,6 +13,8 @@ export const install = (
     console.log(`Installing backend code from folder ${args.folder}.`);
     await updateTask(`Installing backend (${args.folder}).`);
     // Step 1: copy client code from /System/Temp to /AppBox/Files/Apps
+    await shell.mkdir("-p", `/AppBox/System/Backends/${args.key}`);
+
     await shell.cp(
       "-rf",
       `/AppBox/System/Temp/Apps/${args.key}/Backends/${args.folder}/*`,
