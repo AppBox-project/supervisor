@@ -16,9 +16,7 @@ export const install = (
 ) =>
   new Promise<void>(async (resolve, reject) => {
     console.log("Inserting objects");
-    const objects = data.objects;
-
-    console.log(objects);
+    await models.objects.model.create(data.objects);
 
     resolve();
   });
@@ -41,7 +39,7 @@ export const update = (
     const objects = data.objects;
 
     // People
-    console.log(objects);
+    console.log("Update objects: todo");
 
     resolve();
   });
@@ -65,7 +63,7 @@ export const uninstall = (
     const objects = data.objects;
 
     // People
-    console.log("todo");
+    console.log("Uninstall objects: todo");
 
     resolve();
   });

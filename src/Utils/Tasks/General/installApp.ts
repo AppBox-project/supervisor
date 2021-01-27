@@ -24,6 +24,8 @@ export default async (oldTask, models) => {
 
   if (result.code === 128) {
     // Folder was alread there.
+    console.log("Old code found. Checking updates.");
+
     await updateTask(task, 8, "Old code found. Checking updates.");
     await shell.exec(`git -C ${dir} pull`);
   }

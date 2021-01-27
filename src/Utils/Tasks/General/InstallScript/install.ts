@@ -6,6 +6,7 @@ import { install as installStandAlone } from "./installStandAlone";
 import { install as installBackend } from "./installBackend";
 import { install as compile } from "./compile";
 import { install as cleanUp } from "./cleanUp";
+import { install as insertObjects } from "./insertObjects";
 
 export default {
   createModel,
@@ -16,4 +17,5 @@ export default {
   installBackend,
   compile,
   cleanUp,
+  insertObjects,
 };
