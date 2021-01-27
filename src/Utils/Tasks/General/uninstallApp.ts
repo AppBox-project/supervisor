@@ -26,7 +26,7 @@ export default async (task, models) => {
       installScript.versions.map((version) => {
         let match = true;
         map(version.criteria, (value, key) => {
-          if (task.data.arguments.app.choices[key] != value) {
+          if (task.data.arguments.app.data.choices[key] != value) {
             match = false;
           }
         });
