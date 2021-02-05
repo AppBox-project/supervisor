@@ -37,80 +37,80 @@ export default async (task, models) => {
     task.markModified("data");
     await task.save();
     result = await shell.exec("yarn --cwd ../Server install");
-  }
 
-  // Compare systemDataversion
-  // If system data has updated, reflect those changes here
-  task.data.state = "Server: Comparing system data";
-  task.data.progress = 40;
-  task.markModified("data");
-  await task.save();
-
-  const sdv = await models.systemsettings.model.findOne({
-    key: "systemDataVersion",
-  });
-  const modelData = YAML.parse(
-    fs.readFileSync("/AppBox/System/Server/src/Data/Models.yml", "utf8")
-  );
-
-  const objectData = YAML.parse(
-    fs.readFileSync("/AppBox/System/Server/src/Data/Objects.yml", "utf8")
-  );
-
-  if (sdv.value !== modelData.systemDataVersion) {
-    task.data.state = "New system data found! Updating.";
-    console.log("New system data found! Updating.");
-    task.data.progress = 45;
+    // Compare systemDataversion
+    // If system data has updated, reflect those changes here
+    task.data.state = "Server: Comparing system data";
+    task.data.progress = 40;
     task.markModified("data");
     await task.save();
 
-    // Models
-    const currentModels: ModelType[] = await models.models.model.find({});
-    const modelsToUpdate = [];
-    const modelsToCreate = [];
-    modelData.models.map((newModel: ModelType) => {
-      const oldModel: ModelType = find(
-        currentModels,
-        (o) => o.key === newModel.key
-      );
+    const sdv = await models.systemsettings.model.findOne({
+      key: "systemDataVersion",
+    });
+    const modelData = YAML.parse(
+      fs.readFileSync("/AppBox/System/Server/src/Data/Models.yml", "utf8")
+    );
 
-      if (oldModel) {
-        // Update
-        let modelHasChanged = false;
+    const objectData = YAML.parse(
+      fs.readFileSync("/AppBox/System/Server/src/Data/Objects.yml", "utf8")
+    );
 
-        // Compare fields
-        map(newModel.fields, (newField, fieldKey) => {
-          if (!oldModel.fields[fieldKey]) {
-            console.log(`New field: ${newModel.name} / ${fieldKey}`);
-            modelHasChanged = true;
-            oldModel.fields[fieldKey] = newModel.fields[fieldKey];
-            oldModel.markModified("fields");
+    if (sdv.value !== modelData.systemDataVersion) {
+      task.data.state = "New system data found! Updating.";
+      console.log("New system data found! Updating.");
+      task.data.progress = 45;
+      task.markModified("data");
+      await task.save();
+
+      // Models
+      const currentModels: ModelType[] = await models.models.model.find({});
+      const modelsToUpdate = [];
+      const modelsToCreate = [];
+      modelData.models.map((newModel: ModelType) => {
+        const oldModel: ModelType = find(
+          currentModels,
+          (o) => o.key === newModel.key
+        );
+
+        if (oldModel) {
+          // Update
+          let modelHasChanged = false;
+
+          // Compare fields
+          map(newModel.fields, (newField, fieldKey) => {
+            if (!oldModel.fields[fieldKey]) {
+              console.log(`New field: ${newModel.name} / ${fieldKey}`);
+              modelHasChanged = true;
+              oldModel.fields[fieldKey] = newModel.fields[fieldKey];
+              oldModel.markModified("fields");
+            }
+          });
+
+          if (modelHasChanged) {
+            modelsToUpdate.push(oldModel);
           }
-        });
-
-        if (modelHasChanged) {
-          modelsToUpdate.push(oldModel);
+        } else {
+          // Insert
+          modelsToCreate.push(newModel);
         }
-      } else {
-        // Insert
-        modelsToCreate.push(newModel);
-      }
-    });
+      });
 
-    // Create models
-    models.models.model.create(modelsToCreate);
+      // Create models
+      models.models.model.create(modelsToCreate);
 
-    // Updatemodels
-    modelsToUpdate.map(async (newModel) => {
-      await newModel.save();
-    });
+      // Updatemodels
+      modelsToUpdate.map(async (newModel) => {
+        await newModel.save();
+      });
 
-    // Objects (todo)
+      // Objects (todo)
 
-    // Update systemDataversion
-    sdv.value = modelData.systemDataVersion;
-    sdv.markModified("value");
-    sdv.save();
+      // Update systemDataversion
+      sdv.value = modelData.systemDataVersion;
+      sdv.markModified("value");
+      sdv.save();
+    }
   }
 
   // Step 3: Engine
