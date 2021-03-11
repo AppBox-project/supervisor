@@ -31,7 +31,7 @@
     "updateEngine": "git -C /AppBox/System/Engine reset --hard && git -C /AppBox/System/Engine pull && yarn --cwd ../Engine install && yarn --cwd ../Engine build && yarn restartEngine",
     "updateAppServer": "git -C /AppBox/System/App-Server pull && yarn --cwd ../App-Server install && yarn --cwd ../App-Server build",
     "updateSupervisor": "git -C /AppBox/System/Supervisor reset --hard && git -C /AppBox/System/Supervisor pull && yarn --cwd ../Supervisor install && yarn build && yarn restartSupervisor",
-    "updateBox": "yarn updateClient && yarn updateServer && yarn updateEngine && yarn updateAppServer && yarn updateSupervisor",
+    "update": "yarn updateClient && yarn updateServer && yarn updateEngine && yarn updateAppServer && yarn updateSupervisor",
     "buildClient": "yarn --cwd ../Client build",
     "buildServer": "yarn --cwd ../Server build",
     "buildEngine": "yarn --cwd ../Engine build",
