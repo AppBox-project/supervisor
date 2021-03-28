@@ -7,11 +7,13 @@ const fs = require("fs");
 
 export default async (task, models) => {
   console.log("Starting update process");
+  let updateApplied = false;
 
   // Step 1: Client
   let result = await shell.exec("git -C /AppBox/System/Client pull");
   // Todo: does language matter here?
   if (!result.match("up to date")) {
+    updateApplied = true;
     console.log("Client update found. Installing and recompiling.");
     task.data.state = "Updates found. Installing and recompiling client.";
     task.data.progress = 10;
@@ -32,6 +34,7 @@ export default async (task, models) => {
 
   result = await shell.exec("git -C /AppBox/System/Server pull");
   if (!result.match("up to date")) {
+    updateApplied = true;
     task.data.state = "Server: Installing dependencies";
     task.data.progress = 30;
     task.markModified("data");
@@ -121,6 +124,7 @@ export default async (task, models) => {
 
   result = await shell.exec("git -C /AppBox/System/Engine pull");
   if (!result.match("up to date")) {
+    updateApplied = true;
     task.data.state = "Engine: Installing dependencies";
     task.data.progress = 55;
     task.markModified("data");
@@ -136,6 +140,7 @@ export default async (task, models) => {
 
   result = await shell.exec("git -C /AppBox/System/App-Server pull");
   if (!result.match("up to date")) {
+    updateApplied = true;
     task.data.state = "App-Server: Installing dependencies";
     task.data.progress = 80;
     task.markModified("data");
@@ -150,6 +155,7 @@ export default async (task, models) => {
   task.data.state = "Done";
   task.data.progress = 100;
   task.data.done = true;
+  task.data.result = updateApplied ? "update-applied" : "no-update-found";
   task.markModified("data");
   await task.save();
 };
