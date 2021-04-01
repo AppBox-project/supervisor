@@ -58,7 +58,9 @@ db.once("open", async function () {
     tasks.map((task) => {
       if (
         !task.data.done &&
-        (!task.data.progress || task.data.progress === 0)
+        (!task.data.progress ||
+          task.data.progress === 0 ||
+          task.data.progress === "0")
       ) {
         switch (task.data.action) {
           case "box-update":
