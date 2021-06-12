@@ -9,7 +9,7 @@
     "yaml": "^1.10.2"
   },
   "devDependencies": {
-    "@types/bcrypt": "^3.0.1",
+    "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/lodash": "^4.14.170",
     "appbox-types": "^0.0.7",
