@@ -14,7 +14,7 @@
     "@types/lodash": "^4.14.170",
     "appbox-types": "^0.0.7",
     "forever-monitor": "^3.0.1",
-    "nodemon": "^2.0.9",
+    "nodemon": "^2.0.16",
     "ts-node": "^9.1.1",
     "typescript": "^4.3.5"
   },
